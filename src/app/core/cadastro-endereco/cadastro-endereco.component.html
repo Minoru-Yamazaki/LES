@@ -1,0 +1,35 @@
+<nav class="navbar bg-dark navbar-dark justify-content-between mb-3">
+    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>    
+</nav>
+
+<div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+
+            <h2 class="text-center mb-3">Cadastrar endereço de entrega</h2>
+            <div class="row">
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Cep" id="txtCep"></app-input-mb3>
+            </div>
+            <div class="row">
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Cidade" id="txtCidade"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Estado" id="txtEstado"></app-input-mb3>
+                <app-input-mb3 class="col-sm-12" type="text" placeholder="" name="Bairro" id="txtBairro"></app-input-mb3>
+                <app-input-mb3 class="col-sm-12" type="text" placeholder="" name="Rua/Avenida" id="txtRua"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Numero" id="txtNumero"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Complemento" id="txtComplemento"></app-input-mb3>
+                <app-input-mb3 class="col-sm-12" type="text" placeholder="" name="Ponto de Referência" id="txtReferencia"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Nome Completo" id="txtNome"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="CPF" id="txtCpf"></app-input-mb3>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary btn-block mb-3">Salvar endereço</button>
+                </div>                
+            </div>            
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</div>

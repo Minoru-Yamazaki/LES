@@ -1,0 +1,26 @@
+<nav class="navbar bg-dark navbar-dark justify-content-between mb-3">
+    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>    
+</nav>
+
+<div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <h2 class="text-center m-3">Login</h2>
+            <div class="mb-5">
+                <app-input-mb3 type="email" placeholder="minoru@gmail.com" name="Email" id="txtEmail"></app-input-mb3>
+            </div>
+            <div class="mb-5">
+                <app-input-mb3 class="mb-5" type="password" placeholder="" name="Senha" id="pwdSenha"></app-input-mb3>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mb-5">Continuar</button>
+            <p class="text-center mb-3 mt-3">
+                Não tem cadastro?
+                <a [routerLink]="['/cadastro']">Cadastre-se</a>
+            </p>
+
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<nav class="navbar bg-dark navbar-dark justify-content-between mb-3">
+    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>    
+</nav>
+
+<div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            
+            <h2 class="text-center mb-3">Pagamento</h2>
+            <div class="row">
+                <app-input-mb3 class="col-sm-12" type="text" placeholder="" name="Numero do Cartão" id="txtNumero"></app-input-mb3>
+                <app-input-mb3 class="col-sm-12" type="text" placeholder="" name="Nome impresso no Cartão" id="txtNome"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="Validade" id="txtValidade"></app-input-mb3>
+                <app-input-mb3 class="col-sm-6" type="text" placeholder="" name="CVV" id="txtCvv"></app-input-mb3>
+                <app-input-mb3 class="col-sm-12" type="text" placeholder="" name="Numero de parcelas" id="txtParcelas"></app-input-mb3>
+            </div>                
+            <button type="submit" class="btn btn-primary btn-block mb-3">Finalizar Pedido</button>                                
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>
