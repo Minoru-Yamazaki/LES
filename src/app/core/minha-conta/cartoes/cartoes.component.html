@@ -1,0 +1,45 @@
+<nav class="navbar bg-dark navbar-dark justify-content-between mb-3">
+    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>
+    <div class="mt-3 text-white">
+        <p class="fa fa-user-circle-o fa-2x"></p>
+        <a class="mr-3 text-white ml-3" [routerLink]="['/minha-conta']">Minha Conta</a>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <div class="row">
+        <div class="col-sm-3 ml-4 mt-4">
+            <app-menu-conta></app-menu-conta>
+        </div>
+        <div class="col-sm-8">
+            <h3 class="m-3">Cartões</h3>
+            <div class="row">
+                <div class="card border-dark col-sm-5 m-1" >
+                    <div class="card-header justify-content-between">
+                        Cartão 1
+                        <a class="fa fa-pencil text-dark ml-3"></a>                        
+                        <button type="button" class="btn btn-light fa fa-trash"></button>
+                    </div>
+                    <div class="card-body text-dark">
+                      <!--<h5 class="card-title">Dark card title</h5> -->
+                      {{bandeira}} <br>
+                      {{nome}} <br>
+                      **** **** **** {{numero}}                      
+                    </div>               
+                </div>
+                <div class="card border-dark col-sm-5 m-1" >
+                    <div class="card-header">
+                        Cartão 2           
+                    </div>
+                    <div class="card-body text-dark text-center">
+                      <!--<h5 class="card-title">Dark card title</h5> -->
+                      <a class="fa fa-plus-circle mt-3 fa-2x" [routerLink]="['/minha-conta/novo-cartao']"></a>
+                    </div>               
+                </div>
+            </div>
+            
+                                                        
+        </div>
+    </div>
+</div>

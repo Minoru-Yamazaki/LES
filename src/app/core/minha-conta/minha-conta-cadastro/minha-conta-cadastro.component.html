@@ -14,12 +14,26 @@
         </div>
         <div class="col-sm-4">
             <h2 class="text-center mb-3">Cadastro</h2>
-            <app-input-mb3 type="email" placeholder="minoru@gmail.com" name="Email" id="txtEmail"></app-input-mb3>
-            <app-input-mb3 type="password" placeholder="" name="Senha" id="pwdSenha"></app-input-mb3>
-            <app-input-mb3 type="text" placeholder="12345678910" name="CPF" id="txtCpf"></app-input-mb3>
-            <app-input-mb3 type="text" placeholder="" name="Nome Completo" id="txtNome"></app-input-mb3>
-            <app-input-mb3 type="date" placeholder="" name="Data de Nascimento" id="dtNascimento"></app-input-mb3>
-            <app-input-mb3 placeholder="" name="Telefone" id="txtTelefone"></app-input-mb3>
+            <div class="mb-3">
+                <label>Email</label>
+                <input class="form-control" placeholder="minoru@gmail.com" name="txtEmail" id="txtEmail">
+            </div>
+            <div class="mb-3">
+                <label>CPF</label>
+                <input class="form-control" type="text" placeholder="12345678910" name="txtCpf" id="txtCpf">
+            </div>
+            <div class="mb-3">
+                <label>Nome Completo</label>
+                <input class="form-control" type="text" name="txtNome" id="txtNome">
+            </div>
+            <div class="mb-3">
+                <label>Data de Nascimento</label>
+                <input class="form-control" type="date" name="Data de Nascimento" id="dtNascimento">
+            </div>
+            <div class="mb-3">
+                <label>Telefone</label>
+                <input class="form-control" type="text" name="txtTelefone" id="txtTelefone">
+            </div>
             <button type="submit" class="btn btn-primary btn-block mb-3">Salvar Alterações</button>
                                                         
         </div>

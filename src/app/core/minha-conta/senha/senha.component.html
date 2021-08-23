@@ -1,0 +1,33 @@
+<nav class="navbar bg-dark navbar-dark justify-content-between mb-3">
+    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>
+    <div class="mt-3 text-white">
+        <p class="fa fa-user-circle-o fa-2x"></p>
+        <a class="mr-3 text-white ml-3" [routerLink]="['/minha-conta']">Minha Conta</a>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <div class="row">
+        <div class="col-sm-3 ml-4 mt-4">
+            <app-menu-conta></app-menu-conta>
+        </div>
+        <div class="col-sm-4">
+            <h2 class="text-center mb-5">Alteração de senha</h2>
+            <div class="mb-5">
+                <label>Senha atual</label>
+                <input class="form-control" type="password" name="pwdSenhaAtual" id="pwdSenhaAtual">
+            </div>
+            <div class="mb-3">
+                <label>Nova senha</label>
+                <input class="form-control" type="password" name="pwdSenhaNova" id="pwdSenhaNova">
+            </div>
+            <div class="mb-5">
+                <label>Confirmar nova senha</label>
+                <input class="form-control" type="password" name="pwdConfirmaSenha" id="pwdConfirmaSenha">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mb-5">Continuar</button>
+        </div>
+    </div>
+</div>

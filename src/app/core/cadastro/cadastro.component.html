@@ -1,5 +1,5 @@
 <nav class="navbar bg-dark navbar-dark justify-content-between mb-3">
-    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>    
+    <a class="fa fa-home fa-2x text-white" [routerLink]="['/home']"></a>
 </nav>
 
 
@@ -9,14 +9,34 @@
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
             <h2 class="text-center mb-3">Cadastre-se</h2>
-            <app-input-mb3 type="email" placeholder="minoru@gmail.com" name="Email" id="txtEmail"></app-input-mb3>
-            <app-input-mb3 type="password" placeholder="" name="Senha" id="pwdSenha"></app-input-mb3>
-            <app-input-mb3 type="password" placeholder="" name="Confirmar Senha" id="pwdConfSenha"></app-input-mb3>
-            <app-input-mb3 type="text" placeholder="12345678910" name="CPF" id="txtCpf"></app-input-mb3>
-            <app-input-mb3 type="text" placeholder="" name="Nome Completo" id="txtNome"></app-input-mb3>
-            <app-input-mb3 type="date" placeholder="" name="Data de Nascimento" id="dtNascimento"></app-input-mb3>
-            <app-input-mb3 placeholder="" name="Telefone" id="txtTelefone"></app-input-mb3>
-
+            <div class="mb-3">
+                <label>Email</label>
+                <input class="form-control" type="email" placeholder="minoru@gmail.com" name="txtEmail" id="txtEmail">
+            </div>
+            <div class="mb-3">
+                <label>Senha</label>
+                <input class="form-control" type="password" name="pwdSenha" id="pwdSenha">
+            </div>
+            <div class="mb-3">
+                <label>Confirmar Senha</label>
+                <input class="form-control" type="password" name="pwdConfSenha" id="pwdConfSenha">
+            </div>
+            <div class="mb-3">
+                <label>CPF</label>
+                <input class="form-control" type="text" placeholder="12345678910" name="txtCpf" id="txtCpf">
+            </div>
+            <div class="mb-3">
+                <label>Nome Completo</label>
+                <input class="form-control" type="text" name="txtNome" id="txtNome">
+            </div>
+            <div class="mb-3">
+                <label>Data de Nascimento</label>
+                <input class="form-control" type="date" name="dtNascimento" id="dtNascimento">
+            </div>
+            <div class="mb-3">
+                <label>Data de Nascimento</label>
+                <input class="form-control" type="text" name="Telefone" id="txtTelefone">
+            </div>
             <p class="text-center">
                 <button type="submit" class="btn btn-primary btn-block mb-3">Criar seu Cadastro</button>
                 <br>
