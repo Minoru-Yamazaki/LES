@@ -60,12 +60,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public Object alterar(EntidadeDominio entidade) {
-		Aviso aviso = verificaRN(entidade);
-
-		if (aviso.getMensagens() != null) {
-			return aviso;
-		}
-
+		
 		IDAO dao = mapDAO.get(entidade.getClass().getName());
 		
 		return dao.alterar(entidade);
@@ -78,7 +73,11 @@ public class Facade implements IFacade{
 		IMapa mapa = entityToMap.get(entidade.getClass().getName());
 		HashMap<String, String> map = mapa.mapeia(entidade);
 		
-		return dao.consultar(map);
+		List<Object> retorno = (List<Object>) dao.consultar(map);
+		if(retorno.size() == 0)
+			return new Aviso("Nenhum resultado obtido"); 
+		
+		return retorno;
 	}
 	
 	private void defineDAOs() {
@@ -109,6 +108,14 @@ public class Facade implements IFacade{
 		List<IStrategy> validadoresCartao = new ArrayList<IStrategy>();
 		//validadoresCartao.add(new MatValidadorSigla());
 		rnEntidade.put(Cartao.class.getName(), validadoresCartao);
+		
+		List<IStrategy> validadoresEndereco = new ArrayList<IStrategy>();
+		//validadoresCartao.add(new MatValidadorSigla());
+		rnEntidade.put(Endereco.class.getName(), validadoresEndereco);
+		
+		List<IStrategy> validadoresLogin = new ArrayList<IStrategy>();
+		//validadoresCartao.add(new MatValidadorSigla());
+		rnEntidade.put(Login.class.getName(), validadoresLogin);
 	}
 	
 	private Aviso verificaRN(EntidadeDominio entidade) {
