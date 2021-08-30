@@ -24,7 +24,7 @@ public class EnderecoDAO implements IDAO{
 	private Connection connection;
 	private PreparedStatement preparedStatement = null;
 	
-	private Aviso aviso = new Aviso();
+	private Aviso aviso;
 
 	public EnderecoDAO() {}
 	
@@ -36,6 +36,7 @@ public class EnderecoDAO implements IDAO{
 	public Object salvar(EntidadeDominio entidade){
 		Endereco endereco = (Endereco) entidade;
 		boolean commit = false;
+		aviso = new Aviso();
 		
 		try {
 			if (connection == null) {
@@ -94,6 +95,7 @@ public class EnderecoDAO implements IDAO{
 	public Object alterar(EntidadeDominio entidade){
 		Endereco endereco = (Endereco) entidade;
 		boolean commit = false;
+		aviso = new Aviso();
 		
 		try {
 			if (connection == null) {
@@ -145,6 +147,7 @@ public class EnderecoDAO implements IDAO{
 	@Override
 	public Object excluir(Integer id){
 		boolean commit = false;
+		aviso = new Aviso();
 		
 		try {
 			if (connection == null) {
