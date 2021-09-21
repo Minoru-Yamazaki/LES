@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeComponent from '../views/inicial/HomeComponent.vue'
 import CadastroComponent from '../views/cadastro/Cadastro.vue'
 import CadastroOrquidea from '../views/cadastro/CadastroOrquidea.vue'
+import CadastroCupons from '../views/cadastro/AdminCadastroCupons.vue'
 import LoginComponent from '../views/login/Login.vue'
 import MinhaContaComponent from '../views/minha-conta/MinhaContaComponent.vue'
 import EnderecoComponent from '../views/minha-conta/EnderecoComponent.vue'
@@ -16,6 +17,7 @@ import DetalhesOrquideas from '../views/detalhes/Orquidea.vue'
 import Carrinho from '../views/detalhes/Carrinho.vue'
 import Pedidos from '../views/detalhes/Pedidos.vue'
 import DetalhesPedidos from '../views/detalhes/DetalhesPedidos.vue'
+import AdminCupons from '../views/detalhes/AdminCupons.vue'
 import AdminPedidos from '../views/detalhes/AdminPedidos.vue'
 import AdminDetalhesPedido from '../views/detalhes/AdminDetalhesPedido.vue'
 
@@ -34,12 +36,14 @@ const routes = [
   { path: '/cadastro-endereco', component: CadastroEnderecoComponent },
   { path: '/cadastro-cartao', component: CadastroCartao },
   { path: '/cadastro-orquidea', component: CadastroOrquidea },
+  { path: '/cadastro-cupons', component: CadastroCupons },
   { path: '/detalhes-orquidea', component: DetalhesOrquideas },
   { path: '/detalhes-carrinho', component: Carrinho },
   { path: '/detalhes-pedido', component: DetalhesPedidos },
   { path: '/pedidos', component: Pedidos },
   { path: '/admin-pedidos', component: AdminPedidos },
   { path: '/admin-detalhes-pedido', component: AdminDetalhesPedido },
+  { path: '/admin-cupons', component: AdminCupons },
   {
     path: '/about',
     name: 'About',
