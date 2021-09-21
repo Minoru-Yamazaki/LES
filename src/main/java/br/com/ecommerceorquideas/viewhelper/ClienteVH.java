@@ -12,7 +12,7 @@ public class ClienteVH implements IViewHelper{
 	private Cliente cliente = new Cliente();
 	
 	@Override
-	public EntidadeDominio jsonToObject(String json) {
+	public EntidadeDominio jsonToEntidade(String json) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		

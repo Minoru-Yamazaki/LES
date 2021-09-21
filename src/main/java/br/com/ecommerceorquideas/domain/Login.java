@@ -13,7 +13,8 @@ public class Login extends EntidadeDominio{
 	private String senha;
 	private String senhaConfirm;
 	
-	public Login(Integer id) {
+	public Login(Integer id, String email) {
 		super(id);
+		this.email = email;
 	}
 }

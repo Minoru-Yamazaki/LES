@@ -1,12 +1,13 @@
 package br.com.ecommerceorquideas.dao;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
 
 public interface IDAO {
 
-	public Object salvar(EntidadeDominio entidade);
+	public Object salvar(EntidadeDominio entidade) throws SQLException;
 	
 	public Object alterar(EntidadeDominio entidade);
 	

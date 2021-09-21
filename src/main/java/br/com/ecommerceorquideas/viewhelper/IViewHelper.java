@@ -4,5 +4,5 @@ import br.com.ecommerceorquideas.domain.EntidadeDominio;
 
 public interface IViewHelper {
 
-	public EntidadeDominio jsonToObject(String json);
+	public EntidadeDominio jsonToEntidade(String json);
 }

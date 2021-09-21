@@ -30,8 +30,8 @@ public class EnderecoMapa implements IMapa{
 			map.put("numero", endereco.getNumero());
 		if(endereco.getComplemento() != null)
 			map.put("complemento", endereco.getComplemento());
-		if(endereco.getTipoEndereco() != null)
-			map.put("tipo_endereco", endereco.getTipoEndereco());
+		if(endereco.getTipoResidencia() != null)
+			map.put("tipo_residencia", endereco.getTipoResidencia());
 		if(endereco.getIdCliente() != null)
 			map.put("cli_id", endereco.getIdCliente().toString());
 				

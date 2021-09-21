@@ -12,7 +12,7 @@ public class EnderecoVH implements IViewHelper{
 	private Endereco endereco = new Endereco();
 	
 	@Override
-	public EntidadeDominio jsonToObject(String json) {
+	public EntidadeDominio jsonToEntidade(String json) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		

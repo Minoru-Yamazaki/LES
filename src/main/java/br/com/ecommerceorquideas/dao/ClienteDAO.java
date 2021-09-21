@@ -14,6 +14,7 @@ import br.com.ecommerceorquideas.domain.Cartao;
 import br.com.ecommerceorquideas.domain.Cliente;
 import br.com.ecommerceorquideas.domain.Endereco;
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.domain.Login;
 import br.com.ecommerceorquideas.util.Conexao;
 import br.com.ecommerceorquideas.util.GeraSQL;
 import br.com.ecommerceorquideas.warning.Aviso;
@@ -27,12 +28,13 @@ public class ClienteDAO implements IDAO {
 	private Connection connection;
 	private PreparedStatement preparedStatement = null;
 	
-	private Aviso aviso = new Aviso();
+	private Aviso aviso;
 
 	@Override
-	public Object salvar(EntidadeDominio entidade) {
+	public Object salvar(EntidadeDominio entidade){
 		Cliente cliente = (Cliente) entidade;
-
+		aviso = new Aviso();
+		
 		try {
 			connection = Conexao.getConnection();
 			connection.setAutoCommit(false);
@@ -56,10 +58,10 @@ public class ClienteDAO implements IDAO {
 			}
 
 			LoginDAO loginDAO = new LoginDAO(connection);
-			loginDAO.salvar(cliente.getLogin());
+			loginDAO.salvar(cliente.getLogin()); 
 
-			connection.commit();
 			preparedStatement.close();
+			connection.commit();
 			aviso.addMensagem("Salvo com sucesso");
 
 		} catch (SQLException | ClassNotFoundException e) {
@@ -83,7 +85,8 @@ public class ClienteDAO implements IDAO {
 	@Override
 	public Object alterar(EntidadeDominio entidade) {
 		Cliente cliente = (Cliente) entidade;
-
+		aviso = new Aviso();
+		
 		try {
 			connection = Conexao.getConnection();
 			connection.setAutoCommit(false);
@@ -125,7 +128,8 @@ public class ClienteDAO implements IDAO {
 
 	@Override
 	public Object excluir(Integer id) {
-
+		aviso = new Aviso();
+		
 		try {
 			connection = Conexao.getConnection();
 			connection.setAutoCommit(false);
@@ -169,7 +173,6 @@ public class ClienteDAO implements IDAO {
 			connection = Conexao.getConnection();
 
 			String find = GeraSQL.select(map, "clientes");
-			System.out.println(find);
 			preparedStatement = connection.prepareStatement(find);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -186,6 +189,10 @@ public class ClienteDAO implements IDAO {
 				dao = new EnderecoDAO(connection);
 				cliente.setEnderecos((List<Endereco>) dao.consultar(map));
 
+				dao = new LoginDAO(connection);
+				List<Login> logins = (List<Login>) dao.consultar(map);
+				cliente.setLogin(logins.get(0));
+				
 				clientes.add(cliente);
 			}
 

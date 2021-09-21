@@ -12,7 +12,7 @@ public class CartaoVH implements IViewHelper {
 	private Cartao cartao = new Cartao();
 
 	@Override
-	public EntidadeDominio jsonToObject(String json) {
+	public EntidadeDominio jsonToEntidade(String json) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		

@@ -40,13 +40,13 @@ public class Controller {
 	
 	//comando -> exemplo: salvar-cartao
 	@PostMapping(value = "{comando}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> create(@RequestBody String body, @PathVariable("comando") String comando) {
+	public ResponseEntity<Object> crud(@RequestBody String body, @PathVariable("comando") String comando) {
 		 
 		String[] splitted= comando.split("-");
 				
 		IViewHelper vh = vhs.get(splitted[1]);
 		
-		EntidadeDominio entidade = vh.jsonToObject(body);
+		EntidadeDominio entidade = vh.jsonToEntidade(body);
 		
 		ICommand command = commands.get(splitted[0]);
 

@@ -17,39 +17,40 @@ import br.com.ecommerceorquideas.warning.Aviso;
 
 public class CartaoDAO implements IDAO {
 
-	private static final String INSERT = "INSERT INTO cartoes(numero, nome_impresso, cvv, bandeira, cli_id) VALUES(?,?,?,?,?)";
-	private static final String UPDATE = "UPDATE cartoes SET numero=?, nome_impresso=?, bandeira=?, cvv=? WHERE id=?";
+	private static final String INSERT = "INSERT INTO cartoes(numero, nome_impresso, cvv, bandeira, cli_id, preferencial, apelido) VALUES(?,?,?,?,?,?,?)";
+	private static final String UPDATE = "UPDATE cartoes SET numero=?, nome_impresso=?, bandeira=?, cvv=?, preferencial=?, apelido=? WHERE id=?";
 	private static final String DELETE = "DELETE FROM cartoes WHERE id=?";
-	
+
 	private Connection connection;
 	private PreparedStatement preparedStatement = null;
 
-	private Aviso aviso = new Aviso();
-	
-	public CartaoDAO() {}
-	
+	private Aviso aviso;
+
+	public CartaoDAO() {
+	}
+
 	public CartaoDAO(Connection connection) {
 		this.connection = connection;
 	}
 
 	@Override
-	public Object salvar(EntidadeDominio entidade){
+	public Object salvar(EntidadeDominio entidade) {
 		Cartao cartao = (Cartao) entidade;
-		boolean commit = false;
-		
+		aviso = new Aviso();
+
 		try {
-			if (connection == null) {
-				connection = Conexao.getConnection();
-				connection.setAutoCommit(false);
-				commit = true;
-			}
+			connection = Conexao.getConnection();
+			connection.setAutoCommit(false);
+
 			preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
 
 			preparedStatement.setString(1, cartao.getNumero());
 			preparedStatement.setString(2, cartao.getNomeImpresso());
 			preparedStatement.setString(3, cartao.getCodigoSeguranca());
 			preparedStatement.setString(4, cartao.getBandeira());
-			preparedStatement.setInt(5, cartao.getIdCliente());
+			preparedStatement.setInt(5, cartao.getIdCliente());	
+			preparedStatement.setInt(6, cartao.getPreferencial());
+			preparedStatement.setString(7, cartao.getApelido());
 			preparedStatement.executeUpdate();
 
 			ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -57,13 +58,12 @@ public class CartaoDAO implements IDAO {
 			if (rs.next()) {
 				cartao.setId(rs.getInt(1));
 			}
-			
+
 			preparedStatement.close();
-			if(commit) {
-				connection.commit();
-			}
-			aviso.addMensagem("Cartão salvo com sucesso");
+			connection.commit();
 			
+			aviso.addMensagem("Cartão salvo com sucesso");
+
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao salvar as informações");
 			try {
@@ -74,9 +74,7 @@ public class CartaoDAO implements IDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(commit){
-					connection.close();
-				}				
+				connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -85,30 +83,30 @@ public class CartaoDAO implements IDAO {
 	}
 
 	@Override
-	public Object alterar(EntidadeDominio entidade){
+	public Object alterar(EntidadeDominio entidade) {
 		Cartao cartao = (Cartao) entidade;
-		boolean commit = false;
-		
+		aviso = new Aviso();
+
 		try {
-			if (connection == null) {
-				connection = Conexao.getConnection();
-				connection.setAutoCommit(false);
-				commit = true;
-			}
+			connection = Conexao.getConnection();
+			connection.setAutoCommit(false);
+
 			preparedStatement = connection.prepareStatement(UPDATE);
 
 			preparedStatement.setString(1, cartao.getNumero());
 			preparedStatement.setString(2, cartao.getNomeImpresso());
 			preparedStatement.setString(3, cartao.getBandeira());
 			preparedStatement.setString(4, cartao.getCodigoSeguranca());
-			preparedStatement.setInt(5, cartao.getId());
+			preparedStatement.setInt(5, cartao.getPreferencial());
+			preparedStatement.setString(6, cartao.getApelido());
+			preparedStatement.setInt(7, cartao.getId());
 			preparedStatement.executeUpdate();
-			
-			if(commit) {
-				connection.commit();
-			}
+
+			preparedStatement.close();
+			connection.commit();
+
 			aviso.addMensagem("Cartão alterado com sucesso");
-			
+
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao alterar as informações");
 			try {
@@ -119,10 +117,7 @@ public class CartaoDAO implements IDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(commit){
-					connection.close();
-				}
-				preparedStatement.close();
+				connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -131,11 +126,12 @@ public class CartaoDAO implements IDAO {
 	}
 
 	@Override
-	public Object excluir(Integer id){
+	public Object excluir(Integer id) {
 		boolean commit = false;
-		
+		aviso = new Aviso();
+
 		try {
-			if (connection == null) {
+			if (connection == null || connection.isClosed()) {
 				connection = Conexao.getConnection();
 				connection.setAutoCommit(false);
 				commit = true;
@@ -146,11 +142,11 @@ public class CartaoDAO implements IDAO {
 			preparedStatement.executeUpdate();
 
 			preparedStatement.close();
-			if(commit) {
+			if (commit) {
 				connection.commit();
 			}
 			aviso.addMensagem("Cartão excluido com sucesso");
-			
+
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao excluir as informações");
 			try {
@@ -161,9 +157,9 @@ public class CartaoDAO implements IDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(commit){
+				if (commit) {
 					connection.close();
-				}				
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -172,23 +168,22 @@ public class CartaoDAO implements IDAO {
 	}
 
 	@Override
-	public Object consultar(HashMap<String, String> map){
+	public Object consultar(HashMap<String, String> map) {
 		List<EntidadeDominio> cartoes = new ArrayList<>();
-				
+
 		try {
-			if (connection == null) {
+			if (connection == null || connection.isClosed()) {
 				connection = Conexao.getConnection();
 			}
 			String find = GeraSQL.select(map, "cartoes");
-			
+
 			preparedStatement = connection.prepareStatement(find);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				cartoes.add(new Cartao(
-						rs.getInt(1), rs.getString(2), rs.getString(3),
-						rs.getString(4), rs.getInt(5), rs.getString(6) ));
+				cartoes.add(new Cartao(rs.getInt(1), rs.getString(2), rs.getString(3),
+						rs.getString(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8)));
 			}
 
 			preparedStatement.close();

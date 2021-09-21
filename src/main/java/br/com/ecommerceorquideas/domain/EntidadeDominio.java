@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EntidadeDominio {
+public abstract class EntidadeDominio {
 
 	private Integer id = null;
 }

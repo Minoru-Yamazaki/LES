@@ -12,7 +12,7 @@ public class LoginVH implements IViewHelper{
 	private Login login = new Login();
 	
 	@Override
-	public EntidadeDominio jsonToObject(String json) {
+	public EntidadeDominio jsonToEntidade(String json) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		

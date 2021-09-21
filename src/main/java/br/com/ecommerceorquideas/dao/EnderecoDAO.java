@@ -17,8 +17,8 @@ import br.com.ecommerceorquideas.warning.Aviso;
 
 public class EnderecoDAO implements IDAO{
 
-	private static final String INSERT = "INSERT INTO enderecos(cidade, estado, pais, bairro, tipo_logradouro, logradouro, numero, complemento, tipo_endereco, cli_id) VALUES(?,?,?,?,?,?,?,?,?,?)";
-	private static final String UPDATE = "UPDATE enderecos SET cidade=?, estado=?, pais=?, bairro=?, tipo_logradouro=?, logradouro=?, numero=?, complemento=?, tipo_endereco=? WHERE id=?";
+	private static final String INSERT = "INSERT INTO enderecos(cidade, estado, pais, bairro, tipo_logradouro, logradouro, numero, complemento, tipo_residencia, cli_id, cep, apelido) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String UPDATE = "UPDATE enderecos SET cidade=?, estado=?, pais=?, bairro=?, tipo_logradouro=?, logradouro=?, numero=?, complemento=?, tipo_residencia=?, cep=?, apelido=? WHERE id=?";
 	private static final String DELETE = "DELETE FROM enderecos WHERE id=?";
 
 	private Connection connection;
@@ -35,15 +35,13 @@ public class EnderecoDAO implements IDAO{
 	@Override
 	public Object salvar(EntidadeDominio entidade){
 		Endereco endereco = (Endereco) entidade;
-		boolean commit = false;
 		aviso = new Aviso();
 		
 		try {
-			if (connection == null) {
-				connection = Conexao.getConnection();
-				connection.setAutoCommit(false);
-				commit = true;
-			}
+			
+			connection = Conexao.getConnection();
+			connection.setAutoCommit(false);
+			
 			preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
 
 			preparedStatement.setString(1, endereco.getCidade());
@@ -54,8 +52,10 @@ public class EnderecoDAO implements IDAO{
 			preparedStatement.setString(6, endereco.getLogradouro());
 			preparedStatement.setString(7, endereco.getNumero());
 			preparedStatement.setString(8, endereco.getComplemento());
-			preparedStatement.setString(9, endereco.getTipoEndereco());
+			preparedStatement.setString(9, endereco.getTipoResidencia());
 			preparedStatement.setInt(10, endereco.getIdCliente());
+			preparedStatement.setString(11, endereco.getCep());
+			preparedStatement.setString(12, endereco.getApelido());
 			
 			preparedStatement.executeUpdate();
 
@@ -65,10 +65,8 @@ public class EnderecoDAO implements IDAO{
 				endereco.setId(rs.getInt(1));
 			}
 			preparedStatement.close();
+			connection.commit();
 			
-			if(commit) {
-				connection.commit();
-			}
 			aviso.addMensagem("Endereço salvo com sucesso");
 			
 		} catch (SQLException | ClassNotFoundException e) {
@@ -81,9 +79,7 @@ public class EnderecoDAO implements IDAO{
 			e.printStackTrace();
 		} finally {
 			try {
-				if(commit){
-					connection.close();
-				}				
+				connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -94,15 +90,12 @@ public class EnderecoDAO implements IDAO{
 	@Override
 	public Object alterar(EntidadeDominio entidade){
 		Endereco endereco = (Endereco) entidade;
-		boolean commit = false;
 		aviso = new Aviso();
 		
 		try {
-			if (connection == null) {
-				connection = Conexao.getConnection();
-				connection.setAutoCommit(false);
-				commit = true;
-			}
+			connection = Conexao.getConnection();
+			connection.setAutoCommit(false);
+			
 			preparedStatement = connection.prepareStatement(UPDATE);
 
 			preparedStatement.setString(1, endereco.getCidade());
@@ -113,15 +106,17 @@ public class EnderecoDAO implements IDAO{
 			preparedStatement.setString(6, endereco.getLogradouro());
 			preparedStatement.setString(7, endereco.getNumero());
 			preparedStatement.setString(8, endereco.getComplemento());
-			preparedStatement.setString(9, endereco.getTipoEndereco());
-			preparedStatement.setInt(10, endereco.getId());
+			preparedStatement.setString(9, endereco.getTipoResidencia());
+			preparedStatement.setString(10, endereco.getCep());
+			preparedStatement.setString(11, endereco.getApelido());
+			preparedStatement.setInt(12, endereco.getId());
+			
 			
 			preparedStatement.executeUpdate();
 
 			preparedStatement.close();
-			if(commit) {
-				connection.commit();
-			}
+			connection.commit();
+			
 			aviso.addMensagem("Endereço alterado com sucesso");
 			
 		} catch (SQLException | ClassNotFoundException e) {
@@ -134,9 +129,8 @@ public class EnderecoDAO implements IDAO{
 			e.printStackTrace();
 		} finally {
 			try {
-				if(commit){
-					connection.close();
-				}				
+				connection.close();
+								
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -150,16 +144,14 @@ public class EnderecoDAO implements IDAO{
 		aviso = new Aviso();
 		
 		try {
-			if (connection == null) {
+			if (connection == null || connection.isClosed()) {
 				connection = Conexao.getConnection();
 				connection.setAutoCommit(false);
-				commit = true;
+				commit = true;				
 			}
 			preparedStatement = connection.prepareStatement(DELETE);
-
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
-
 			preparedStatement.close();
 			if(commit) {
 				connection.commit();
@@ -177,7 +169,7 @@ public class EnderecoDAO implements IDAO{
 		} finally {
 			try {
 				if(commit){
-					connection.close();
+					connection.close();					
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -191,7 +183,7 @@ public class EnderecoDAO implements IDAO{
 		List<EntidadeDominio> enderecos = new ArrayList<>();
 
 		try {
-			if (connection == null) {
+			if (connection == null || connection.isClosed()) {
 				connection = Conexao.getConnection();
 			}
 			
@@ -205,7 +197,8 @@ public class EnderecoDAO implements IDAO{
 				enderecos.add(new Endereco(rs.getInt(1), rs.getString(2),
 						rs.getString(3), rs.getString(4), rs.getString(5),
 						rs.getString(6), rs.getString(7), rs.getString(8),
-						rs.getString(9), rs.getString(10), rs.getInt(11)));						
+						rs.getString(9), rs.getString(10), rs.getString(11),
+						rs.getInt(12), rs.getString(13)));						
 			}
 
 			preparedStatement.close();
