@@ -20,9 +20,14 @@ import br.com.ecommerceorquideas.command.SalvarCommand;
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
 import br.com.ecommerceorquideas.viewhelper.CartaoVH;
 import br.com.ecommerceorquideas.viewhelper.ClienteVH;
+import br.com.ecommerceorquideas.viewhelper.CompraVH;
+import br.com.ecommerceorquideas.viewhelper.CupomVH;
 import br.com.ecommerceorquideas.viewhelper.EnderecoVH;
 import br.com.ecommerceorquideas.viewhelper.IViewHelper;
+import br.com.ecommerceorquideas.viewhelper.ImagemVH;
 import br.com.ecommerceorquideas.viewhelper.LoginVH;
+import br.com.ecommerceorquideas.viewhelper.OrquideaVH;
+import br.com.ecommerceorquideas.viewhelper.ProdutoVH;
 
 
 @CrossOrigin("*")
@@ -67,6 +72,11 @@ public class Controller {
 		vhs.put("cliente", new ClienteVH());
 		vhs.put("endereco", new EnderecoVH());
 		vhs.put("login", new LoginVH());
+		vhs.put("cupom", new CupomVH());
+		vhs.put("compra", new CompraVH());
+		vhs.put("produto", new ProdutoVH());
+		vhs.put("orquidea", new OrquideaVH());
+		vhs.put("imagem", new ImagemVH());
 	}
 
 }

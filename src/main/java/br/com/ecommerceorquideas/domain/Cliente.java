@@ -20,7 +20,10 @@ public class Cliente extends EntidadeDominio{
 	private String telefone;
 	private List<Cartao> cartoes;
 	private List<Endereco> enderecos;
+	private List<Cupom> cupons;
+	private List<Compra> pedidos;
 	private Login login;
+	
 	
 	public Cliente(Integer id, String cpf, String nome, String sexo, Date nascimento,
 			String telefone, String tipoTelefone) {

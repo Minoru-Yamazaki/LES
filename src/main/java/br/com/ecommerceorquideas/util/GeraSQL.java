@@ -24,13 +24,23 @@ public class GeraSQL {
 	}
 
 	public static boolean isId(String palavra) {
-		List<String> ids = new ArrayList<String>();
-		ids.add("id");
-		ids.add("cli_id");
-		ids.add("id!");
-
-		for (String id : ids) {
-			if (palavra.equals(id))
+		List<String> numeros = new ArrayList<String>();
+		numeros.add("ativo"); 
+		numeros.add("cli_id");
+		numeros.add("id");
+		numeros.add("id!");
+		numeros.add("ped_id");
+		numeros.add("pro_id");
+		numeros.add("preco");
+		numeros.add("prc_id");
+		numeros.add("quantidade");
+		numeros.add("orq_id");
+		numeros.add("valor_custo");
+		numeros.add("valor_venda");
+		numeros.add("valor");
+		
+		for (String numero : numeros) {
+			if (palavra.equals(numero))
 				return true;
 		}
 		return false;

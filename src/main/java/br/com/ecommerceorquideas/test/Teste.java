@@ -1,11 +1,14 @@
 package br.com.ecommerceorquideas.test;
 
-import java.util.HashMap;
+import java.sql.SQLException;
 
 import org.apache.commons.codec.binary.Base64;
 
-import br.com.ecommerceorquideas.domain.Cliente;
-import br.com.ecommerceorquideas.warning.Aviso;
+import br.com.ecommerceorquideas.dao.CartoesCompraDAO;
+import br.com.ecommerceorquideas.dao.CuponsCompraDAO;
+import br.com.ecommerceorquideas.dao.IDAO;
+import br.com.ecommerceorquideas.domain.CartoesCompra;
+import br.com.ecommerceorquideas.domain.CuponsCompra;
 
 public class Teste {
 
@@ -32,13 +35,13 @@ public class Teste {
 
     }
     
-    public static void main(String[] args) {
-    	Aviso aviso = new Aviso();
+    public static void main(String[] args) throws SQLException {
+    	IDAO dao = new CartoesCompraDAO();
     	
-    	if(aviso.getMensagens()==null) {
-    		System.out.println("teste");
-    	}
+    	CartoesCompra cartoes = new CartoesCompra();
+    	cartoes.setId(2);
     	
+    	dao.excluir(3);
     }
 	
 

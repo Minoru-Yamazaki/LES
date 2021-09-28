@@ -12,9 +12,11 @@ import java.util.List;
 
 import br.com.ecommerceorquideas.domain.Cartao;
 import br.com.ecommerceorquideas.domain.Cliente;
+import br.com.ecommerceorquideas.domain.Cupom;
 import br.com.ecommerceorquideas.domain.Endereco;
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
 import br.com.ecommerceorquideas.domain.Login;
+import br.com.ecommerceorquideas.domain.Compra;
 import br.com.ecommerceorquideas.util.Conexao;
 import br.com.ecommerceorquideas.util.GeraSQL;
 import br.com.ecommerceorquideas.warning.Aviso;
@@ -192,6 +194,12 @@ public class ClienteDAO implements IDAO {
 				dao = new LoginDAO(connection);
 				List<Login> logins = (List<Login>) dao.consultar(map);
 				cliente.setLogin(logins.get(0));
+				
+				dao = new CupomDAO(connection);
+				cliente.setCupons((List<Cupom>) dao.consultar(map));
+				
+				dao = new CompraDAO(connection);
+				cliente.setPedidos((List<Compra>) dao.consultar(map));
 				
 				clientes.add(cliente);
 			}
