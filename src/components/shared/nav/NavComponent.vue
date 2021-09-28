@@ -5,7 +5,7 @@
         <p class="fa fa-home fa-2x"></p>
       </router-link>
 
-      <div class="mt-3 text-white">        
+      <div class="mt-3 text-white">
         <i class="text-white"> {{ getPrimeiroNome() }} </i>
         <router-link class="mx-3 text-white" to="/minha-conta">
           <i class="fa fa-user fa-2x"></i>
@@ -52,6 +52,8 @@ export default {
       localStorage.removeItem("idEndereco");
       localStorage.removeItem("idCartao");
       localStorage.removeItem("idOrquidea");
+      localStorage.removeItem("compra");
+      localStorage.removeItem("produtos");
     },
   },
 };

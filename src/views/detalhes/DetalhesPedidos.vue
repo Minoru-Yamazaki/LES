@@ -22,8 +22,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="produto in produtos" :key="produto.id">
-                <td>{{ produto.id }}</td>
+              <tr
+                v-for="produto in cliente.pedidos[getIndex()].produtos"
+                :key="produto.id"
+              >
+                <td>{{ produto.idProduto }}</td>
                 <td>{{ produto.preco }}</td>
                 <td>{{ produto.nome }}</td>
                 <td>{{ produto.descricao }}</td>
@@ -49,28 +52,20 @@ export default {
 
   data() {
     return {
-      produtos: [
-        {
-          id: 1,
-          preco: "R$ 50,90",
-          nome: "Laelia",
-          descricao: "Laelia Crispa",
-          quantidade: 1,
-        },
-        {
-          id: 2,
-          preco: "R$ 55,9",
-          nome: "Brassavola Tuberculata",
-          descricao: "Brassavola Tuberculata Branca Adulta",
-          quantidade: 2,
-        },
-      ],
+      cliente: null,
+      idCompra: null,
     };
   },
-  created() {},
+  created() {
+    this.cliente = JSON.parse(localStorage.getItem("cliente"));
+    this.idCompra = localStorage.getItem("idCompra");
+  },
   methods: {
     voltar() {
       this.$router.push({ path: "/pedidos" });
+    },
+    getIndex() {
+      return localStorage.getItem("indexPedido");
     },
   },
 };

@@ -19,6 +19,7 @@ import Pedidos from '../views/detalhes/Pedidos.vue'
 import DetalhesPedidos from '../views/detalhes/DetalhesPedidos.vue'
 import AdminCupons from '../views/detalhes/AdminCupons.vue'
 import AdminPedidos from '../views/detalhes/AdminPedidos.vue'
+import Cupom from '../views/detalhes/Cupom.vue'
 import AdminDetalhesPedido from '../views/detalhes/AdminDetalhesPedido.vue'
 
 Vue.use(VueRouter)
@@ -40,6 +41,7 @@ const routes = [
   { path: '/detalhes-orquidea', component: DetalhesOrquideas },
   { path: '/detalhes-carrinho', component: Carrinho },
   { path: '/detalhes-pedido', component: DetalhesPedidos },
+  { path: '/detalhes-cupom', component: Cupom },
   { path: '/pedidos', component: Pedidos },
   { path: '/admin-pedidos', component: AdminPedidos },
   { path: '/admin-detalhes-pedido', component: AdminDetalhesPedido },

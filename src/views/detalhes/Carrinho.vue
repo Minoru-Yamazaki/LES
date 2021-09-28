@@ -17,12 +17,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="produto in produtos" :key="produto.id">
-                <td>{{ produto.descricao }}</td>
+              <tr v-for="produto in compra.produtos" :key="produto.pro_id">
+                <td>{{ produto.nome }}</td>
                 <td>R$ {{ produto.preco }}</td>
                 <td>
                   <button
-                    v-on:click="diminuiQtde(produtos.indexOf(produto))"
+                    v-on:click="
+                      diminuiQtde(
+                        compra.produtos.indexOf(produto),
+                        produtos.preco
+                      )
+                    "
                     type="button"
                     class="btn"
                   >
@@ -31,11 +36,19 @@
                   <input
                     type="number"
                     min="1"
-                    v-model="produto.quantidade"
+                    v-model="
+                      compra.produtos[compra.produtos.indexOf(produto)]
+                        .quantidade
+                    "
                     readonly
                   />
                   <button
-                    v-on:click="aumentaQtde(produtos.indexOf(produto))"
+                    v-on:click="
+                      aumentaQtde(
+                        compra.produtos.indexOf(produto),
+                        produto.preco
+                      )
+                    "
                     type="button"
                     class="btn"
                   >
@@ -43,15 +56,23 @@
                   </button>
                 </td>
                 <td>
-                  <i v-if="produto.subTotal"> {{ produto.subTotal }} </i>
+                  <i v-if="produto.sub_total"> {{ produto.sub_total }} </i>
                   <i v-else>
                     {{
-                      (produto.subTotal = produto.quantidade * produto.preco)
+                      (compra.produtos[
+                        compra.produtos.indexOf(produto)
+                      ].sub_total =
+                        compra.produtos[compra.produtos.indexOf(produto)]
+                          .quantidade * produto.preco)
                     }}
                   </i>
                 </td>
                 <td>
-                  <button v-on:click="excluir(n)" type="button" class="btn">
+                  <button
+                    v-on:click="excluir(compra.produtos.indexOf(produto))"
+                    type="button"
+                    class="btn"
+                  >
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>
@@ -64,7 +85,7 @@
                 <td></td>
                 <td><b>Subtotal:</b></td>
                 <td>
-                  <i v-if="total">{{ total }}</i>
+                  <i v-if="compra.valor">{{ compra.valor }}</i>
                   <i v-else> {{ calculaTotal() }} </i>
                 </td>
               </tr>
@@ -75,7 +96,7 @@
               <i>selecione o CEP:</i>
             </div>
             <div class="col-sm-2">
-              <select class="form-control" v-model="frete.cep">
+              <select class="form-control" v-model="compra.cep">
                 <option
                   v-for="endereco in cliente.enderecos"
                   :key="endereco.id"
@@ -175,64 +196,101 @@ export default {
 
   data() {
     return {
+      compra: {
+        status: "Em processamento",
+        data: null,
+        valor: 0,
+        frete: 0,
+        cidade: null,
+        estado: null,
+        pais: null,
+        bairro: null,
+        tipo_logradouro: null,
+        logradouro: null,
+        numero: null,
+        complemento: null,
+        tipo_residencia: null,
+        cep: null,
+        cli_id: null,
+        cupons: [],
+        produtos: [],
+      },
+      orquideas: [],
       produtos: [
         {
           id: 1,
-          descricao: "Vanda",
-          preco: 59.9,
-          quantidade: 1,
-          subTotal: 0,
-        },
-        {
-          id: 2,
-          descricao: "Epidendrum",
-          preco: 10,
-          quantidade: 1,
-          subTotal: 0,
-        },
-        {
-          id: 3,
-          descricao: "phalaenopsis",
-          preco: 29.9,
-          quantidade: 1,
+          preco: 20,
+          descricao: "",
+          quantidade: 2,
           subTotal: 0,
         },
       ],
+
       total: 0,
       cliente: null,
-      frete: {
-        cep: null,
-      },
+      fretes: [
+        { cep: "08753445", valor: 10 },
+        { cep: "08770330", valor: 5 },
+        { cep: "08710290", valor: 7.5 },
+        { cep: "08715350", valor: 3.6 },
+        { cep: "08717080", valor: 8 },
+        { cep: "08710280", valor: 3.8 },
+        { cep: "08773160", valor: 12.8 },
+        { cep: "08773010", valor: 6.4 },
+        { cep: "08717090", valor: 6.7 },
+        { cep: "08715470", valor: 4.2 },
+        { cep: "08730150", valor: 6.9 },
+      ],
     };
   },
   created() {
     this.cliente = JSON.parse(localStorage.getItem("cliente"));
+
+    this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
   },
   methods: {
     finalizaCompra() {},
-    calcularFrete() {},
-    aumentaQtde(index) {
-      this.produtos[index].quantidade++;
-      this.produtos[index].subTotal =
-        this.produtos[index].preco * this.produtos[index].quantidade;
-      this.calculaTotal();
+    calcularFrete() {
+      this.compra.frete = 0;
+      for (const frete of this.fretes) {
+        if (this.compra.cep == frete.cep) {
+          this.compra.frete = frete.valor;
+          alert("valor do frete R$: " + frete.valor);
+        }
+      }
+      if (this.compra.frete == 0) {
+        alert("CEP Inválido");
+      }
     },
-    diminuiQtde(index) {
-      if (this.produtos[index].quantidade > 1) {
-        this.produtos[index].quantidade--;
-        this.produtos[index].subTotal =
-          this.produtos[index].preco * this.produtos[index].quantidade;
+    aumentaQtde(index, preco) {
+      this.compra.produtos[index].quantidade++;
+      this.compra.produtos[index].sub_total =
+        preco * this.compra.produtos[index].quantidade;
+      this.calculaTotal();
+      localStorage.setItem("compra", JSON.stringify(this.compra));
+      localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
+    },
+    diminuiQtde(index, preco) {
+      if (this.compra.produtos[index].quantidade > 1) {
+        this.compra.produtos[index].quantidade--;
+        this.compra.produtos[index].sub_total =
+          preco * this.compra.produtos[index].quantidade;
         this.calculaTotal();
+        localStorage.setItem("compra", JSON.stringify(this.compra));
+        localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
       }
     },
     calculaTotal() {
-      this.total = 0;
-      for (const produto of this.produtos) {
-        this.total += produto.subTotal;
+      this.compra.valor = 0;
+      for (const produto of this.compra.produtos) {
+        this.compra.valor += produto.sub_total;
       }
     },
-    excluir(n) {
-      this.numeros.splice(this.numeros.indexOf(n), 1);
+    excluir(index) {
+      this.compra.produtos.splice(index, 1);
+      this.calculaTotal();
+      localStorage.setItem("compra", JSON.stringify(this.compra));
+      localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
     },
   },
 };

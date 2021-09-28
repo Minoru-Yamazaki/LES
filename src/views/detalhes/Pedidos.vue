@@ -17,13 +17,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="pedido in pedidos" :key="pedido.id">
+              <tr v-for="pedido in cliente.pedidos" :key="pedido.id">
                 <td>{{ pedido.status }}</td>
                 <td>{{ pedido.data }}</td>
-                <td>{{ pedido.valor }}</td>
+                <td>R$ {{ pedido.valor }}</td>
                 <td>
                   <button
-                    v-on:click="visualizarCompra()"
+                    v-on:click="
+                      visualizarCompra(cliente.pedidos.indexOf(pedido))
+                    "
                     type="button"
                     class="btn btn-primary"
                   >
@@ -51,25 +53,15 @@ export default {
 
   data() {
     return {
-      pedidos: [
-        {
-          id: 1,
-          status: "finalizado",
-          data: "12/03/2021",
-          valor: "R$ 50,90",
-        },
-        {
-          id: 2,
-          status: "Em processamento",
-          data: "12/09/2021",
-          valor: "R$ 26,90",
-        },
-      ],
+      cliente: null,
     };
   },
-  created() {},
+  created() {
+    this.cliente = JSON.parse(localStorage.getItem("cliente"));
+  },
   methods: {
-    visualizarCompra() {
+    visualizarCompra(index) {
+      localStorage.setItem("indexPedido", index);
       this.$router.push({ path: "/detalhes-pedido" });
     },
   },

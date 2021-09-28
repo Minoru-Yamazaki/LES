@@ -20,7 +20,7 @@
       </router-link>
     </div>
     <div>
-      <router-link class="text-secondary h4" to="">
+      <router-link class="text-secondary h4" to="/detalhes-cupom">
         <p class="fa fa-ticket-alt"></p>
         <i class="ml-2">cupons</i>
       </router-link>
