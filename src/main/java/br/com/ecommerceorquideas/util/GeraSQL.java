@@ -9,12 +9,16 @@ public class GeraSQL {
 
 	public static String select(HashMap<String, String> map, String tabela) {
 		String find = "SELECT * FROM " + tabela + " WHERE ";// alu_id=?";
-
+				
 		for (Entry<String, String> pair : map.entrySet()) {
 
 			if (isId(pair.getKey())) {
 				find += pair.getKey() + "=" + pair.getValue() + " and ";
-			} else {
+			}else if(pair.getKey() == "nome") {
+				find += "nome LIKE '%" + pair.getValue() + "%' and ";
+			}else if(pair.getKey() == "valor_venda") {
+				find += pair.getKey() + "<=" + pair.getValue() + " and ";
+			}else {
 				find += pair.getKey() + "='" + pair.getValue() + "' and ";
 			}
 		}
@@ -36,7 +40,6 @@ public class GeraSQL {
 		numeros.add("quantidade");
 		numeros.add("orq_id");
 		numeros.add("valor_custo");
-		numeros.add("valor_venda");
 		numeros.add("valor");
 		
 		for (String numero : numeros) {

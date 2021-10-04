@@ -1,13 +1,12 @@
-package br.com.ecommerceorquideas.strategy.pedido;
+package br.com.ecommerceorquideas.strategy;
 
 import java.util.Date;
 import java.util.List;
 
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
 import br.com.ecommerceorquideas.domain.Compra;
-import br.com.ecommerceorquideas.strategy.IStrategy;
 
-public class InseriData implements IStrategy{
+public class PedInseriData implements IStrategy{
 
 	@Override
 	public List<String> processar(EntidadeDominio entidade) {

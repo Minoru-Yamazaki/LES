@@ -1,13 +1,12 @@
-package br.com.ecommerceorquideas.strategy.cliente;
+package br.com.ecommerceorquideas.strategy;
 
 import java.util.Arrays;
 import java.util.List;
 
 import br.com.ecommerceorquideas.domain.Cliente;
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.strategy.IStrategy;
 
-public class VerficaPreencTelefone implements IStrategy{
+public class CliVerficaPreencTelefone implements IStrategy{
 
 	@Override
 	public List<String> processar(EntidadeDominio entidade) {

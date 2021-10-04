@@ -9,8 +9,10 @@ import java.util.Map;
 import br.com.ecommerceorquideas.dao.CartaoDAO;
 import br.com.ecommerceorquideas.dao.ClienteDAO;
 import br.com.ecommerceorquideas.dao.CompraDAO;
+import br.com.ecommerceorquideas.dao.CorDAO;
 import br.com.ecommerceorquideas.dao.CupomDAO;
 import br.com.ecommerceorquideas.dao.EnderecoDAO;
+import br.com.ecommerceorquideas.dao.GeneroDAO;
 import br.com.ecommerceorquideas.dao.IDAO;
 import br.com.ecommerceorquideas.dao.ImagemDAO;
 import br.com.ecommerceorquideas.dao.LoginDAO;
@@ -19,9 +21,11 @@ import br.com.ecommerceorquideas.dao.ProdutoDAO;
 import br.com.ecommerceorquideas.domain.Cartao;
 import br.com.ecommerceorquideas.domain.Cliente;
 import br.com.ecommerceorquideas.domain.Compra;
+import br.com.ecommerceorquideas.domain.Cor;
 import br.com.ecommerceorquideas.domain.Cupom;
 import br.com.ecommerceorquideas.domain.Endereco;
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.domain.Genero;
 import br.com.ecommerceorquideas.domain.Imagem;
 import br.com.ecommerceorquideas.domain.Login;
 import br.com.ecommerceorquideas.domain.Orquidea;
@@ -29,21 +33,24 @@ import br.com.ecommerceorquideas.domain.Produto;
 import br.com.ecommerceorquideas.mapa.CartaoMapa;
 import br.com.ecommerceorquideas.mapa.ClienteMapa;
 import br.com.ecommerceorquideas.mapa.CompraMapa;
+import br.com.ecommerceorquideas.mapa.CorMapa;
 import br.com.ecommerceorquideas.mapa.CupomMapa;
 import br.com.ecommerceorquideas.mapa.EnderecoMapa;
+import br.com.ecommerceorquideas.mapa.GeneroMapa;
 import br.com.ecommerceorquideas.mapa.IMapa;
 import br.com.ecommerceorquideas.mapa.ImagemMapa;
 import br.com.ecommerceorquideas.mapa.LoginMapa;
 import br.com.ecommerceorquideas.mapa.OrquideaMapa;
 import br.com.ecommerceorquideas.mapa.ProdutoMapa;
 import br.com.ecommerceorquideas.strategy.IStrategy;
-import br.com.ecommerceorquideas.strategy.cliente.VerficaPreencTelefone;
-import br.com.ecommerceorquideas.strategy.cliente.VerificaCPF;
-import br.com.ecommerceorquideas.strategy.cliente.VerificaData;
-import br.com.ecommerceorquideas.strategy.cliente.VerificaEmail;
-import br.com.ecommerceorquideas.strategy.cliente.VerificaPreencSexo;
-import br.com.ecommerceorquideas.strategy.cliente.VerificaSenha;
-import br.com.ecommerceorquideas.strategy.pedido.InseriData;
+import br.com.ecommerceorquideas.strategy.PedInseriData;
+import br.com.ecommerceorquideas.strategy.CliVerficaPreencTelefone;
+import br.com.ecommerceorquideas.strategy.CliVerificaCPF;
+import br.com.ecommerceorquideas.strategy.CliVerificaData;
+import br.com.ecommerceorquideas.strategy.CliVerificaEmail;
+import br.com.ecommerceorquideas.strategy.CliVerificaPreencSexo;
+import br.com.ecommerceorquideas.strategy.CliVerificaSenha;
+import br.com.ecommerceorquideas.strategy.GenVerificaNome;
 import br.com.ecommerceorquideas.warning.Aviso;
 
 public class Facade implements IFacade {
@@ -128,6 +135,8 @@ public class Facade implements IFacade {
 		mapDAO.put(Produto.class.getName(), new ProdutoDAO());
 		mapDAO.put(Orquidea.class.getName(), new OrquideaDAO());
 		mapDAO.put(Imagem.class.getName(), new ImagemDAO());
+		mapDAO.put(Cor.class.getName(), new CorDAO());
+		mapDAO.put(Genero.class.getName(), new GeneroDAO());
 	}
 
 	private void defineMapas() {
@@ -142,120 +151,72 @@ public class Facade implements IFacade {
 		entityToMap.put(Produto.class.getName(), new ProdutoMapa());
 		entityToMap.put(Orquidea.class.getName(), new OrquideaMapa());
 		entityToMap.put(Imagem.class.getName(), new ImagemMapa());
+		entityToMap.put(Cor.class.getName(), new CorMapa());
+		entityToMap.put(Genero.class.getName(), new GeneroMapa());
 	}
 
 	private void defineValidadores() {
 		rnSalvar = new HashMap<String, List<IStrategy>>();
 
 		List<IStrategy> salvarCliente = new ArrayList<IStrategy>();
-		salvarCliente.add(new VerificaSenha());
-		salvarCliente.add(new VerificaCPF());
-		salvarCliente.add(new VerificaEmail());
-		salvarCliente.add(new VerficaPreencTelefone());
-		salvarCliente.add(new VerificaData());
-		salvarCliente.add(new VerificaPreencSexo());
+		salvarCliente.add(new CliVerificaSenha());
+		salvarCliente.add(new CliVerificaCPF());
+		salvarCliente.add(new CliVerificaEmail());
+		salvarCliente.add(new CliVerficaPreencTelefone());
+		salvarCliente.add(new CliVerificaData());
+		salvarCliente.add(new CliVerificaPreencSexo());
 		rnSalvar.put(Cliente.class.getName(), salvarCliente);
 
-		List<IStrategy> salvarCartao = new ArrayList<IStrategy>();
-		// validadoresCartao.add(new MatValidadorSigla());
-		rnSalvar.put(Cartao.class.getName(), salvarCartao);
-
-		List<IStrategy> salvarEndereco = new ArrayList<IStrategy>();
-		// validadoresCartao.add(new MatValidadorSigla());
-		rnSalvar.put(Endereco.class.getName(), salvarEndereco);
-
+		
 		List<IStrategy> salvarLogin = new ArrayList<IStrategy>();
-		salvarLogin.add(new VerificaSenha());
+		salvarLogin.add(new CliVerificaSenha());
 		rnSalvar.put(Login.class.getName(), salvarLogin);
 		
-		List<IStrategy> salvarCupom = new ArrayList<IStrategy>();
-		//salvarCupom.add();
-		rnSalvar.put(Cupom.class.getName(), salvarCupom);
-
 		List<IStrategy> salvarPedido = new ArrayList<IStrategy>();
-		salvarPedido.add(new InseriData());
+		salvarPedido.add(new PedInseriData());
 		rnSalvar.put(Compra.class.getName(), salvarPedido);
 		
-		List<IStrategy> salvarProduto = new ArrayList<IStrategy>();
-		//salvarPedido.add(new InseriData());
-		rnSalvar.put(Produto.class.getName(), salvarProduto);
+		List<IStrategy> salvarGenero = new ArrayList<IStrategy>();
+		salvarGenero.add(new GenVerificaNome());
+		rnSalvar.put(Genero.class.getName(), salvarGenero);
 		
-		List<IStrategy> salvarOrquidea = new ArrayList<IStrategy>();
-		//salvarOrquidea.add(new InseriData());
-		rnSalvar.put(Orquidea.class.getName(), salvarOrquidea);
-		
-		List<IStrategy> salvarImagem = new ArrayList<IStrategy>();
-		//salvarImagem.add(new InseriData());
-		rnSalvar.put(Imagem.class.getName(), salvarImagem);
-
 		// **************alterar*******************
 
 		rnAlterar = new HashMap<String, List<IStrategy>>();
 
 		List<IStrategy> alterarCliente = new ArrayList<IStrategy>();
-		alterarCliente.add(new VerificaCPF());
-		alterarCliente.add(new VerficaPreencTelefone());
-		alterarCliente.add(new VerificaData());
-		alterarCliente.add(new VerificaPreencSexo());
+		alterarCliente.add(new CliVerificaCPF());
+		alterarCliente.add(new CliVerficaPreencTelefone());
+		alterarCliente.add(new CliVerificaData());
+		alterarCliente.add(new CliVerificaPreencSexo());
 		rnAlterar.put(Cliente.class.getName(), alterarCliente);
 
-		List<IStrategy> alterarCartao = new ArrayList<IStrategy>();
-		// validadoresCartao.add(new MatValidadorSigla());
-		rnAlterar.put(Cartao.class.getName(), alterarCartao);
-
-		List<IStrategy> alterarEndereco = new ArrayList<IStrategy>();
-		// validadoresCartao.add(new MatValidadorSigla());
-		rnAlterar.put(Endereco.class.getName(), alterarEndereco);
-
 		List<IStrategy> alterarLogin = new ArrayList<IStrategy>();
-		alterarLogin.add(new VerificaSenha());
+		alterarLogin.add(new CliVerificaSenha());
 		rnAlterar.put(Login.class.getName(), alterarLogin);
-		
-		List<IStrategy> alterarCupom = new ArrayList<IStrategy>();
-		//alterarCupom.add();
-		rnAlterar.put(Cupom.class.getName(), alterarCupom);
-		
-		List<IStrategy> alterarCompra = new ArrayList<IStrategy>();
-		//alterarCompra.add();
-		rnAlterar.put(Compra.class.getName(), alterarCompra);
-		
-		List<IStrategy> alterarProduto = new ArrayList<IStrategy>();
-		//alterarProduto.add();
-		rnAlterar.put(Produto.class.getName(), alterarProduto);
-		
-		List<IStrategy> alterarOrquidea = new ArrayList<IStrategy>();
-		//alterarOrquidea.add();
-		rnAlterar.put(Orquidea.class.getName(), alterarOrquidea);
-		
-		List<IStrategy> alterarImagem = new ArrayList<IStrategy>();
-		//alterarImagem.add();
-		rnAlterar.put(Imagem.class.getName(), alterarImagem);
 
+		List<IStrategy> alterarGenero = new ArrayList<IStrategy>();
+		alterarGenero.add(new GenVerificaNome());
+		rnAlterar.put(Genero.class.getName(), alterarGenero);
+		
 		// **************consultar*******************
-		rnConsultar = new HashMap<String, List<IStrategy>>();
-
-		List<IStrategy> consultarCliente = new ArrayList<IStrategy>();
-		// consultarCliente.add(new VerificaSenha());
-		rnConsultar.put(Cliente.class.getName(), consultarCliente);
-
-		List<IStrategy> consultarCartao = new ArrayList<IStrategy>();
-		// validadoresCartao.add(new MatValidadorSigla());
-		rnConsultar.put(Cartao.class.getName(), consultarCartao);
-
-		List<IStrategy> consultarEndereco = new ArrayList<IStrategy>();
-		// validadoresCartao.add(new MatValidadorSigla());
-		rnConsultar.put(Endereco.class.getName(), consultarEndereco);
-
-		List<IStrategy> consultarLogin = new ArrayList<IStrategy>();
-		// consultarLogin.add(new VerificaSenha());
-		rnConsultar.put(Login.class.getName(), consultarLogin);
-
+		
 	}
 
 	private Aviso verificaRN(EntidadeDominio entidade, Map<String, List<IStrategy>> map) {
 		Aviso aviso = new Aviso();
 		String nomeClasse = entidade.getClass().getName();
-		List<IStrategy> regras = map.get(nomeClasse);
+		List<IStrategy> regras;
+		
+		try {
+			regras = map.get(nomeClasse);			
+		} catch (Exception e) {
+			System.out.println(e);
+			return aviso;
+		}
+		
+		if(regras == null)
+			return aviso;
 
 		for (IStrategy validador : regras) {
 			List<String> erros = validador.processar(entidade);

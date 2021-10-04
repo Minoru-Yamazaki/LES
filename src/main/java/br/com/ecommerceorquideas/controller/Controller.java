@@ -21,8 +21,10 @@ import br.com.ecommerceorquideas.domain.EntidadeDominio;
 import br.com.ecommerceorquideas.viewhelper.CartaoVH;
 import br.com.ecommerceorquideas.viewhelper.ClienteVH;
 import br.com.ecommerceorquideas.viewhelper.CompraVH;
+import br.com.ecommerceorquideas.viewhelper.CorVH;
 import br.com.ecommerceorquideas.viewhelper.CupomVH;
 import br.com.ecommerceorquideas.viewhelper.EnderecoVH;
+import br.com.ecommerceorquideas.viewhelper.GeneroVH;
 import br.com.ecommerceorquideas.viewhelper.IViewHelper;
 import br.com.ecommerceorquideas.viewhelper.ImagemVH;
 import br.com.ecommerceorquideas.viewhelper.LoginVH;
@@ -77,6 +79,8 @@ public class Controller {
 		vhs.put("produto", new ProdutoVH());
 		vhs.put("orquidea", new OrquideaVH());
 		vhs.put("imagem", new ImagemVH());
+		vhs.put("cor", new CorVH());
+		vhs.put("genero", new GeneroVH());
 	}
 
 }

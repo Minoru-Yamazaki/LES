@@ -1,4 +1,4 @@
-package br.com.ecommerceorquideas.strategy.cliente;
+package br.com.ecommerceorquideas.strategy;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,9 +8,8 @@ import br.com.ecommerceorquideas.dao.ClienteDAO;
 import br.com.ecommerceorquideas.dao.IDAO;
 import br.com.ecommerceorquideas.domain.Cliente;
 import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.strategy.IStrategy;
 
-public class VerificaCPF implements IStrategy{
+public class CliVerificaCPF implements IStrategy{
 
 	@Override
 	public List<String> processar(EntidadeDominio entidade) {
