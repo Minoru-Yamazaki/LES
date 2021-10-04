@@ -7,9 +7,9 @@
       <!-- Control the column width, and how they should appear on different devices -->
       <div class="row">
         <div class="col-sm-2">
-          <form>
+          <form @submit="ajustePreco()">
             <div class="mb-3">
-              <i>orquídea:</i>
+              <i>nome:</i>
               <input
                 class="form-control"
                 type="text"
@@ -28,8 +28,8 @@
             <div class="mb-3">
               <i>gênero:</i>
               <select class="form-control" v-model="orchid.genero">
-                <option v-for="genero in listas.generos" :key="genero">
-                  {{ genero }}
+                <option v-for="genero in listas.generos" :key="genero.genero">
+                  {{ genero.genero }}
                 </option>
               </select>
             </div>
@@ -47,16 +47,14 @@
                   {{ tamanho }}
                 </option>
               </select>
-              {{ orchid.tamanho }}
             </div>
             <div class="mb-3">
               <i>cor:</i>
               <select class="form-control" v-model="orchid.cor">
-                <option v-for="cor in listas.cores" :key="cor">
-                  {{ cor }}
+                <option v-for="cor in listas.cores" :key="cor.cor">
+                  {{ cor.cor }}
                 </option>
               </select>
-              {{ orchid.cor }}
             </div>
             <button type="submit" class="btn btn-primary btn-block ">
               Pesquisar
@@ -71,9 +69,18 @@
               class="card border-light col-sm-3"
             >
               <img :src="orquidea.imagens[0].foto" height="200" />
-              <div class="card-body">
+              <div class="card-body text-center">
                 <p class="card-text">
                   {{ orquidea.nome }}
+                </p>
+                <p>
+                  <i>Estoque: </i>
+                  <i v-if="orquidea.ativo">
+                    <span class="badge badge-success">Disponível</span>
+                  </i>
+                  <i v-else>
+                    <span class="badge badge-danger">Indisponível</span>
+                  </i>
                 </p>
                 <button
                   type="button"
@@ -123,9 +130,9 @@ export default {
         cor: null,
       },
       listas: {
-        generos: ["cattleya"],
-        tamanhos: ["1", "2", "3"],
-        cores: ["branco", "amarelo"],
+        generos: [],
+        tamanhos: ["1", "2", "3", "pré-adulta", "adulta"],
+        cores: [],
       },
       precos: [20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300],
       precoEscolhido: null,
@@ -136,7 +143,7 @@ export default {
       },
       orquideas: null,
 
-      produtos: []
+      produtos: [],
     };
   },
   created() {
@@ -156,27 +163,39 @@ export default {
     const json = {
       ativo: 1,
     };
-    /* Consulta Orquideas */
-    const postMethod = {
-      method: "POST", // Method itself
-      headers: {
-        "Content-type": "application/json; charset=UTF-8", // Indicates the content
-      },
-      body: JSON.stringify(json), // We send data in JSON format
-    };
-
-    fetch("http://localhost:8080/consultar-orquidea", postMethod)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data[0].id != null) {
-          this.orquideas = data;
-        } else {
-          alert(data[0].mensagens);
-        }
-      });
+    this.carregarOrquideas(json);
+    this.carregarCores();
+    this.carregarGeneros();
   },
 
   methods: {
+    ajustePreco() {
+      try {
+        this.orchid.valorVenda = this.precoEscolhido.split(" ")[2];
+      } catch (error) {
+        console.log(error);
+      }
+      this.carregarOrquideas(this.orchid);
+    },
+    carregarOrquideas(json) {
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(json), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-orquidea", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.orquideas = data;
+          } else {
+            alert(data[0].mensagens);
+          }
+        });
+    },
     adicionarCarrinho(id) {
       let tem = false;
 
@@ -189,12 +208,11 @@ export default {
         this.consultarOrquidea(id);
         alert("Produto adicionado");
       }
-
     },
     consultarOrquidea(id) {
       const json = {
-        id: id
-      }
+        id: id,
+      };
 
       const postMethod = {
         method: "POST", // Method itself
@@ -214,10 +232,10 @@ export default {
               nome: data[0].nome,
               descricao: data[0].descricao,
               quantidade: 1,
-              sub_total: data[0].valorVenda
+              sub_total: data[0].valorVenda,
             };
             this.produtos.push(produto);
-            localStorage.setItem("produtos", JSON.stringify(this.produtos))
+            localStorage.setItem("produtos", JSON.stringify(this.produtos));
           } else {
             alert(data[0].mensagens);
           }
@@ -230,6 +248,53 @@ export default {
       this.$router.push({ path: "/detalhes-orquidea" });
     },
 
+    carregarCores() {
+      const json = {
+        ativo: 1,
+      };
+
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(json), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-cor", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.listas.cores = data;
+          } else {
+            alert(data[0].mensagens);
+          }
+        });
+    },
+
+    carregarGeneros() {
+      const json = {
+        ativo: 1,
+      };
+
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(json), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-genero", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.listas.generos = data;
+          } else {
+            alert(data[0].mensagens);
+          }
+        });
+    },
   },
 };
 </script>
