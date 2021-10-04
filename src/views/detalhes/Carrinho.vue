@@ -246,7 +246,11 @@ export default {
   created() {
     this.cliente = JSON.parse(localStorage.getItem("cliente"));
 
-    this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
+    try {
+      this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     finalizaCompra() {},
@@ -282,8 +286,12 @@ export default {
     },
     calculaTotal() {
       this.compra.valor = 0;
-      for (const produto of this.compra.produtos) {
-        this.compra.valor += produto.sub_total;
+      try {
+        for (const produto of this.compra.produtos) {
+          this.compra.valor += produto.sub_total;
+        }
+      } catch (error) {
+        return 0;
       }
     },
     excluir(index) {
