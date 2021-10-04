@@ -113,16 +113,26 @@
                 />
               </div>
               <div class="col-sm-6 mb-3">
-                <label>Tipo de endereco</label>
+                <label>Tipo de endereço</label>
                 <select
                   class="form-control"
                   name="optEndereco"
                   id="optEndereco"
                   v-model="endereco.tipoResidencia"
+                  required
                 >
                   <option value="casa">casa</option>
                   <option value="apartamentp">apartamento</option>
                 </select>
+              </div>
+              <div class="col-sm-6 mb-3">
+                <label>Apelido</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  v-model="endereco.apelido"
+                  required
+                />
               </div>
             </div>
             <div class="row mt-3">
@@ -156,6 +166,7 @@ export default {
     return {
       endereco: {
         id: null,
+        apelido: null,
         cidade: null,
         cep: null,
         estado: null,
@@ -204,6 +215,7 @@ export default {
     let enderecos = usuario.enderecos;
     for (const endereco of enderecos) {
       if (endereco.id == this.endereco.id) {
+        this.endereco.apelido = endereco.apelido;
         this.endereco.cidade = endereco.cidade;
         this.endereco.cep = endereco.cep;
         this.endereco.estado = endereco.estado;
@@ -219,7 +231,6 @@ export default {
   },
   methods: {
     alterar() {
-      
       const postMethod = {
         method: "POST", // Method itself
         headers: {

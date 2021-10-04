@@ -17,7 +17,7 @@
               class="card border-dark col-sm-5 m-1"
             >
               <div class="card-header justify-content-between">
-                Cartão
+                {{ cartao.apelido }}
                 <button
                   v-on:click="alterar(cartao.id)"
                   type="button"

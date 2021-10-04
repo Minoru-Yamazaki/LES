@@ -17,7 +17,7 @@
               class="card border-dark col-sm-5 m-1"
             >
               <div class="card-header justify-content-between">
-                Endereço
+                {{ endereco.apelido }}
                 <button
                   v-on:click="alterar(endereco.id)"
                   type="button"

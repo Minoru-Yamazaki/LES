@@ -14,6 +14,16 @@
           <form @submit.prevent="alterar()">
             <div class="row">
               <div class="col-sm-12 mb-3">
+                <label>Apelido</label>
+                <input
+                  class="form-control"
+                  placeholder="Nubank"
+                  type="text"
+                  v-model="cartao.apelido"
+                  required
+                />
+              </div>
+              <div class="col-sm-12 mb-3">
                 <label>Numero do Cartão</label>
                 <input
                   class="form-control"
@@ -69,8 +79,6 @@
               Salvar
             </button>
           </form>
-
-          
         </div>
         <div class="col-sm-3"></div>
       </div>
@@ -93,6 +101,7 @@ export default {
     return {
       cartao: {
         id: null,
+        apelido: null,
         numero: null,
         nomeImpresso: null,
         codigoSeguranca: null,
@@ -106,17 +115,17 @@ export default {
     this.cartao.id = localStorage.getItem("idCartao");
     let cartoes = usuario.cartoes;
     for (const cartao of cartoes) {
-        if(cartao.id == this.cartao.id){
-          this.cartao.numero = cartao.numero;
-          this.cartao.nomeImpresso = cartao.nomeImpresso;
-          this.cartao.codigoSeguranca = cartao.codigoSeguranca;
-          this.cartao.bandeira = cartao.bandeira;
-        }
+      if (cartao.id == this.cartao.id) {
+        this.cartao.apelido = cartao.apelido;
+        this.cartao.numero = cartao.numero;
+        this.cartao.nomeImpresso = cartao.nomeImpresso;
+        this.cartao.codigoSeguranca = cartao.codigoSeguranca;
+        this.cartao.bandeira = cartao.bandeira;
+      }
     }
   },
   methods: {
     alterar() {
-      
       const postMethod = {
         method: "POST", // Method itself
         headers: {
