@@ -95,7 +95,7 @@
                   type="text"
                   name="txtNumero"
                   id="txtNumero"
-                  maxlength="10"  
+                  maxlength="10"
                   v-model="endereco.numero"
                   required
                 />
@@ -111,7 +111,7 @@
                 />
               </div>
               <div class="col-sm-6 mb-3">
-                <label>Tipo de endereco</label>
+                <label>Tipo de endereço</label>
                 <select
                   class="form-control"
                   name="optEndereco"
@@ -121,6 +121,15 @@
                   <option value="casa">casa</option>
                   <option value="apartamentp">apartamento</option>
                 </select>
+              </div>
+              <div class="col-sm-6 mb-3">
+                <label>Apelido</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  v-model="endereco.apelido"
+                  required
+                />
               </div>
             </div>
             <div class="row mt-3">
@@ -153,6 +162,7 @@ export default {
   data() {
     return {
       endereco: {
+        apelido: null,
         cidade: null,
         estado: null,
         pais: null,

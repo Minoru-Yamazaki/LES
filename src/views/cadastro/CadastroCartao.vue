@@ -10,6 +10,16 @@
           <form @submit.prevent="salvar()">
             <div class="row">
               <div class="col-sm-12 mb-3">
+                <label>Apelido</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Nubank"
+                  v-model="cartao.apelido"
+                  required
+                />
+              </div>
+              <div class="col-sm-12 mb-3">
                 <label>Numero do Cartão</label>
                 <input
                   class="form-control"
@@ -85,6 +95,7 @@ export default {
   data() {
     return {
       cartao: {
+        apelido: null,
         numero: null,
         nomeImpresso: null,
         codigoSeguranca: null,
