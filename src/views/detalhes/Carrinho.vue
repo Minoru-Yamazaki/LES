@@ -44,9 +44,9 @@
                   />
                   <button
                     v-on:click="
-                      aumentaQtde(
-                        compra.produtos.indexOf(produto),
-                        produto.preco
+                      consultarOrquidea(
+                        produto.pro_id,
+                        compra.produtos.indexOf(produto)
                       )
                     "
                     type="button"
@@ -299,6 +299,34 @@ export default {
       this.calculaTotal();
       localStorage.setItem("compra", JSON.stringify(this.compra));
       localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
+    },
+    consultarOrquidea(id, index) {
+      const json = {
+        id: id,
+      };
+
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(json), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-orquidea", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            let qtdeAtual = this.compra.produtos[index].quantidade;
+            if (qtdeAtual < data[0].quantidade) {
+              this.aumentaQtde(index, data[0].valorVenda);
+            } else {
+              alert("Quantidade insuficiente no estoque");
+            }
+          } else {
+            alert(data[0].mensagens);
+          }
+        });
     },
   },
 };
