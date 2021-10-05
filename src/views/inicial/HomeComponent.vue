@@ -60,6 +60,12 @@
               Pesquisar
             </button>
           </form>
+          <button
+            v-on:click="limparPesquisa()"
+            class="btn btn-danger btn-block mt-3"
+          >
+            Limpar
+          </button>
         </div>
         <div class="col-sm-9">
           <div class="row">
@@ -84,7 +90,7 @@
                 </p>
                 <button
                   type="button"
-                  @click="adicionarCarrinho(orquidea.id)"
+                  @click="adicionarCarrinho(orquidea.id, orquidea.ativo)"
                   class="btn"
                 >
                   <i class="fa fa-shopping-cart"></i>
@@ -136,7 +142,6 @@ export default {
       },
       precos: [20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300],
       precoEscolhido: null,
-      teste: [1, 2, 3, 4, 5],
       logado: false,
       login: {
         id: null,
@@ -147,19 +152,7 @@ export default {
     };
   },
   created() {
-    let login = JSON.parse(localStorage.getItem("login"));
-
-    let produtos = JSON.parse(localStorage.getItem("produtos"));
-    if (produtos != null) {
-      this.produtos = produtos;
-    }
-
-    try {
-      this.login.id = login.id;
-      this.logado = true;
-    } catch (error) {
-      this.logado = false;
-    }
+    this.carregaInfo();
     const json = {
       ativo: 1,
     };
@@ -169,6 +162,22 @@ export default {
   },
 
   methods: {
+    
+    carregaInfo() {
+      let login = JSON.parse(localStorage.getItem("login"));
+
+      let produtos = JSON.parse(localStorage.getItem("produtos"));
+      if (produtos != null) {
+        this.produtos = produtos;
+      }
+
+      try {
+        this.login.id = login.id;
+        this.logado = true;
+      } catch (error) {
+        this.logado = false;
+      }
+    },
     ajustePreco() {
       try {
         this.orchid.valorVenda = this.precoEscolhido.split(" ")[2];
@@ -196,17 +205,21 @@ export default {
           }
         });
     },
-    adicionarCarrinho(id) {
-      let tem = false;
+    adicionarCarrinho(id, disponivel) {
+      if (disponivel) {
+        let tem = false;
 
-      for (let produtos of this.produtos) {
-        if (produtos.pro_id == id) {
-          tem = true;
+        for (let produtos of this.produtos) {
+          if (produtos.pro_id == id) {
+            tem = true;
+          }
         }
-      }
-      if (!tem) {
-        this.consultarOrquidea(id);
-        alert("Produto adicionado");
+        if (!tem) {
+          this.consultarOrquidea(id);
+          alert("Produto adicionado");
+        }
+      } else {
+        alert("Produto indisponível");
       }
     },
     consultarOrquidea(id) {
@@ -294,6 +307,21 @@ export default {
             alert(data[0].mensagens);
           }
         });
+    },
+    
+    limparPesquisa() {
+      this.orchid.nome = null;
+      this.orchid.genero = null;
+      this.orchid.valorVenda = null;
+      this.orchid.tipo = null;
+      this.orchid.tamanho = null;
+      this.orchid.cor = null;
+      this.precoEscolhido = null;
+      const json = {
+        ativo: 1,
+      };
+
+      this.carregarOrquideas(json);
     },
   },
 };
