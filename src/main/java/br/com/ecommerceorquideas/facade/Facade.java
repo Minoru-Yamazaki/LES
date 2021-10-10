@@ -44,6 +44,7 @@ import br.com.ecommerceorquideas.mapa.OrquideaMapa;
 import br.com.ecommerceorquideas.mapa.ProdutoMapa;
 import br.com.ecommerceorquideas.strategy.IStrategy;
 import br.com.ecommerceorquideas.strategy.PedInseriData;
+import br.com.ecommerceorquideas.strategy.CarVerificaCadastro;
 import br.com.ecommerceorquideas.strategy.CliVerficaPreencTelefone;
 import br.com.ecommerceorquideas.strategy.CliVerificaCPF;
 import br.com.ecommerceorquideas.strategy.CliVerificaData;
@@ -179,6 +180,10 @@ public class Facade implements IFacade {
 		List<IStrategy> salvarGenero = new ArrayList<IStrategy>();
 		salvarGenero.add(new GenVerificaNome());
 		rnSalvar.put(Genero.class.getName(), salvarGenero);
+		
+		List<IStrategy> salvarCartao = new ArrayList<IStrategy>();
+		salvarCartao.add(new CarVerificaCadastro());
+		rnSalvar.put(Cartao.class.getName(), salvarCartao);
 		
 		// **************alterar*******************
 
