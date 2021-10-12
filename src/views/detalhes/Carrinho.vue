@@ -18,14 +18,20 @@
             </thead>
             <tbody>
               <tr v-for="produto in compra.produtos" :key="produto.pro_id">
-                <td>{{ produto.nome }}</td>
+                <td>
+                  <router-link
+                    :to="{path: '/detalhes-orquidea/' + produto.pro_id}"
+                  >
+                    <i>{{ produto.nome }}</i>
+                  </router-link>
+                </td>
                 <td>R$ {{ produto.preco }}</td>
                 <td>
                   <button
                     v-on:click="
                       diminuiQtde(
                         compra.produtos.indexOf(produto),
-                        produtos.preco
+                        produto.preco
                       )
                     "
                     type="button"
@@ -86,17 +92,33 @@
                 <td><b>Subtotal:</b></td>
                 <td>
                   <i v-if="compra.valor">{{ compra.valor }}</i>
-                  <i v-else> {{ calculaTotal() }} </i>
+                  <i v-else> {{ calculaSubTotal() }} </i>
                 </td>
               </tr>
             </tfoot>
           </table>
           <div class="row mb-3">
-            <div class="col-sm-2 text-right">
+            <div class="col-sm-3 text-right">
+              <i>código cupom promocional:</i>
+            </div>
+            <div class="col-sm-2">
+              <input
+                type="text"
+                class="form-control"
+                v-model="codigoCupomPromocional"
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-3 text-right">
               <i>selecione o CEP:</i>
             </div>
             <div class="col-sm-2">
-              <select class="form-control" v-model="compra.cep">
+              <select
+                class="form-control"
+                v-model="compra.cep"
+                v-on:change="calcularFrete()"
+              >
                 <option
                   v-for="endereco in cliente.enderecos"
                   :key="endereco.id"
@@ -106,14 +128,13 @@
               </select>
             </div>
             <div class="col-sm-2">
-              <button
-                type="button"
-                class="btn btn-primary form-control"
-                v-on:click="calcularFrete()"
-              >
-                <i class="fa fa-truck"></i>
-                calcular
-              </button>
+              <input
+                type="text"
+                class="form-control"
+                v-model="compra.frete"
+                disabled
+              />
+              <!--  <i class="fa fa-truck"></i> -->
             </div>
             <div class="col-sm-3">
               <router-link to="/cadastro-endereco">
@@ -122,18 +143,51 @@
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-sm-2 text-right">
+            <div class="col-sm-3 text-right">
               <i>selecione um cartão:</i>
+              <button
+                v-show="!showCartao"
+                class="btn btn-light"
+                v-on:click="showCartao = true"
+              >
+                <i class="fas fa-caret-right"></i>
+              </button>
+              <button
+                v-show="showCartao"
+                class="btn btn-light"
+                v-on:click="showCartao = false"
+              >
+                <i class="fas fa-caret-down"></i>
+              </button>
             </div>
-            <div class="col-sm-2">
-              <select class="form-control">
-                <option v-for="cartao in cliente.cartoes" :key="cartao.id">
-                  {{ cartao.numero }}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <input type="text" class="form-control" placeholder="R$ 12.34" />
+            <div class="col-sm-4">
+              <table
+                class="row mb-3"
+                v-for="cartao in cliente.cartoes"
+                :key="cartao.id"
+                v-show="showCartao"
+              >
+                <tr class="col-sm-8">
+                  <td>
+                    <input
+                      type="checkbox"
+                      :value="cartao.apelido"
+                      v-model="cartoes"
+                      v-on:change="verificaCartoesUsados()"
+                    />
+                    <label> {{ cartao.apelido }} </label>
+                  </td>
+                </tr>
+                <tr class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="cartao.total"
+                    placeholder="12.34"
+                    v-on:change="verificaCartoesUsados()"
+                  />
+                </tr>
+              </table>
             </div>
             <div class="col-sm-3">
               <router-link to="/cadastro-cartao">
@@ -142,32 +196,67 @@
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-sm-2 text-right">
-              <i>selecione um cupom:</i>
+            <div class="col-sm-3 text-right">
+              <i>cupom de troca: </i>
+              <button
+                v-show="!showCupom"
+                class="btn btn-light"
+                v-on:click="showCupom = true"
+              >
+                <i class="fas fa-caret-right"></i>
+              </button>
+              <button
+                v-show="showCupom"
+                class="btn btn-light"
+                v-on:click="showCupom = false"
+              >
+                <i class="fas fa-caret-down"></i>
+              </button>
             </div>
-            <div class="col-sm-2">
-              <select class="form-control">
-                <option v-for="cartao in cliente.cartoes" :key="cartao.id">
-                  {{ cartao.numero }}
-                </option>
-              </select>
+            <div class="col-sm-4">
+              <table
+                class="row mb-3"
+                v-for="cupom in cliente.cupons"
+                :key="cupom.id"
+                v-show="showCupom"
+              >
+                <tr class="col-sm-8">
+                  <td>
+                    <input
+                      type="checkbox"
+                      :value="cupom.nome"
+                      v-model="cupons"
+                      v-on:change="verificaCuponsUsados()"
+                    />
+                    <label> {{ cupom.nome }} </label>
+                  </td>
+                </tr>
+                <tr class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    :value="cupom.valor"
+                    disabled
+                  />
+                </tr>
+              </table>
             </div>
-            <div class="col-sm-2">
-              <input type="text" class="form-control" value="50" />
-            </div>
+            <div class="row mb-1 text-center"></div>
           </div>
+
           <div class="row mb-3">
             <div class="col-sm-7 "></div>
             <div class="col-sm-2 text-right">
               <b>Total: R$ </b>
             </div>
             <div class="col-sm-1">
-              {{ total }}
+              <i v-if="total">{{ total }}</i>
+              <i v-else> {{ calculaTotal() }} </i>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-sm-9 text-right"></div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
               <button
                 v-on:click="finalizaCompra()"
                 type="button"
@@ -214,18 +303,13 @@ export default {
         cli_id: null,
         cupons: [],
         produtos: [],
+        cartoes: [],
       },
       orquideas: [],
-      produtos: [
-        {
-          id: 1,
-          preco: 20,
-          descricao: "",
-          quantidade: 2,
-          subTotal: 0,
-        },
-      ],
+      cupons: [],
+      cartoes: [],
 
+      codigoCupomPromocional: null,
       total: 0,
       cliente: null,
       fretes: [
@@ -241,35 +325,90 @@ export default {
         { cep: "08715470", valor: 4.2 },
         { cep: "08730150", valor: 6.9 },
       ],
+      //dropdwon
+      showCupom: false,
+      showCartao: false,
     };
   },
   created() {
-    this.cliente = JSON.parse(localStorage.getItem("cliente"));
-
-    try {
-      this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
-    } catch (error) {
-      console.log(error);
-    }
+    this.carregaInfos();
+    this.addVarTotal();
   },
   methods: {
+    setId(id) {
+      localStorage.setItem("idOrquidea", id);
+    },
+    verificaCartoesUsados() {
+      this.compra.cartoes = [];
+      for (const cartao of this.cartoes) {
+        for (const cartaoCliente of this.cliente.cartoes) {
+          if (cartao == cartaoCliente.apelido) {
+            this.adicionaCartao(cartaoCliente);
+          }
+        }
+      }
+    },
+    adicionaCartao(cartao) {
+      let Cartao = {
+        numero: cartao.numero,
+        bandeira: cartao.bandeira,
+        total: cartao.total,
+        idCartao: cartao.id,
+      };
+      this.compra.cartoes.push(Cartao);
+    },
+    verificaCuponsUsados() {
+      this.compra.cupons = [];
+      for (const cupom of this.cupons) {
+        for (const cupomCliente of this.cliente.cupons) {
+          if (cupom == cupomCliente.nome) {
+            this.adicionaCupom(cupomCliente);
+          }
+        }
+      }
+      this.calculaTotal();
+    },
+    adicionaCupom(cupom) {
+      let Cupom = {
+        nome: cupom.nome,
+        descricao: cupom.descricao,
+        tipoCupom: cupom.tipoCupom,
+        valor: cupom.valor,
+        idCupom: cupom.id,
+      };
+      this.compra.cupons.push(Cupom);
+    },
+    carregaInfos() {
+      try {
+        this.cliente = JSON.parse(localStorage.getItem("cliente"));
+        this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    addVarTotal() {
+      for (const cartao of this.cliente.cartoes) {
+        cartao.total = 0;
+      }
+    },
     finalizaCompra() {},
     calcularFrete() {
       this.compra.frete = 0;
       for (const frete of this.fretes) {
         if (this.compra.cep == frete.cep) {
           this.compra.frete = frete.valor;
-          alert("valor do frete R$: " + frete.valor);
         }
       }
       if (this.compra.frete == 0) {
         alert("CEP Inválido");
       }
+      this.calculaTotal();
     },
     aumentaQtde(index, preco) {
       this.compra.produtos[index].quantidade++;
       this.compra.produtos[index].sub_total =
         preco * this.compra.produtos[index].quantidade;
+      this.calculaSubTotal();
       this.calculaTotal();
       localStorage.setItem("compra", JSON.stringify(this.compra));
       localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
@@ -279,12 +418,21 @@ export default {
         this.compra.produtos[index].quantidade--;
         this.compra.produtos[index].sub_total =
           preco * this.compra.produtos[index].quantidade;
+        this.calculaSubTotal();
         this.calculaTotal();
         localStorage.setItem("compra", JSON.stringify(this.compra));
         localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
       }
     },
     calculaTotal() {
+      let valorCupons = 0;
+      for (const cupom of this.compra.cupons) {
+        valorCupons += cupom.valor;
+      }
+      this.total = this.compra.valor + this.compra.frete - valorCupons;
+      return this.total;
+    },
+    calculaSubTotal() {
       this.compra.valor = 0;
       try {
         for (const produto of this.compra.produtos) {
@@ -296,6 +444,7 @@ export default {
     },
     excluir(index) {
       this.compra.produtos.splice(index, 1);
+      this.calculaSubTotal();
       this.calculaTotal();
       localStorage.setItem("compra", JSON.stringify(this.compra));
       localStorage.setItem("produtos", JSON.stringify(this.compra.produtos));
