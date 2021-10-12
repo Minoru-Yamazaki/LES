@@ -38,7 +38,7 @@ const routes = [
   { path: '/cadastro-cartao', component: CadastroCartao },
   { path: '/cadastro-orquidea', component: CadastroOrquidea },
   { path: '/cadastro-cupons', component: CadastroCupons },
-  { path: '/detalhes-orquidea', component: DetalhesOrquideas },
+  { path: '/detalhes-orquidea/:id', component: DetalhesOrquideas, props: true },
   { path: '/detalhes-carrinho', component: Carrinho },
   { path: '/detalhes-pedido', component: DetalhesPedidos },
   { path: '/detalhes-cupom', component: Cupom },

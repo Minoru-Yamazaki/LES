@@ -39,6 +39,7 @@ import NavComponent from "../../components/shared/nav/NavComponent.vue";
 
 export default {
   name: "DetalhesOrquidea",
+  props: ['id'],
 
   components: {
     "app-nav-login": NavComponent,
@@ -51,7 +52,7 @@ export default {
   },
   created() {
     const json = {
-      id: JSON.parse(localStorage.getItem("idOrquidea")),
+      id: this.$route.params.id, //JSON.parse(localStorage.getItem("idOrquidea"))
     };
     /* Consulta Orquideas */
     const postMethod = {

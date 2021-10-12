@@ -10,7 +10,6 @@
           </button>
         </div>
 
-        
         <div class="col-sm-10">
           <h1>Detalhes</h1>
           <table class="table">
@@ -46,7 +45,7 @@
           <i>Valor:</i>
         </div>
         <div class="col-sm-10 text-left">
-          <i> {{ compra.valor }} </i>
+          <i> {{ compra.valorOrquideas }} </i>
         </div>
         <div class="col-sm-2 text-right">
           <i>Status:</i>
@@ -59,7 +58,11 @@
           </select>
         </div>
         <div class="col-sm-2">
-          <button v-on:click="salvar()" type="button" class="btn btn-primary form-control">
+          <button
+            v-on:click="salvar()"
+            type="button"
+            class="btn btn-primary form-control"
+          >
             salvar
           </button>
         </div>

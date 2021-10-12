@@ -95,13 +95,12 @@
                 >
                   <i class="fa fa-shopping-cart"></i>
                 </button>
-                <button
-                  type="button"
-                  @click="detalhes(orquidea.id)"
-                  class="btn"
+                <router-link
+                  :to="{ path: '/detalhes-orquidea/' + orquidea.id }"
                 >
                   <i class="fa fa-info"></i>
-                </button>
+                </router-link>
+
                 <i class="h5 ml-2">R$ {{ orquidea.valorVenda }}</i>
               </div>
             </div>
@@ -162,7 +161,6 @@ export default {
   },
 
   methods: {
-    
     carregaInfo() {
       let login = JSON.parse(localStorage.getItem("login"));
 
@@ -308,7 +306,7 @@ export default {
           }
         });
     },
-    
+
     limparPesquisa() {
       this.orchid.nome = null;
       this.orchid.genero = null;
