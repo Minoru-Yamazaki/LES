@@ -1,6 +1,6 @@
 package br.com.ecommerceorquideas.strategy;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +15,7 @@ public class CarVerificaCadastro implements IStrategy{
 	public List<String> processar(EntidadeDominio entidade) {
 		Cartao cartao = (Cartao) entidade;
 		
+		List<String> mensagens = new ArrayList<String>();
 		String apelido = cartao.getApelido();
 		String numero = cartao.getNumero();
 		String idCliente = cartao.getIdCliente().toString();
@@ -27,14 +28,17 @@ public class CarVerificaCadastro implements IStrategy{
 		
 		for(Cartao card : cartoes) {
 			if(card.getApelido().equals(apelido)) {
-				return Arrays.asList("Apelido já cadastrado");
+				mensagens.add("Apelido já cadastrado");
 			}
 			if(card.getNumero().equals(numero)) {
-				return Arrays.asList("Cartão já cadastrado");
+				mensagens.add("Cartão já cadastrado");
 			}
 		}
 		
-		return null;
+		if(mensagens.size() == 0)
+			return null;
+		else
+			return mensagens;
 	}
 
 }

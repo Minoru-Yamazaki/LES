@@ -51,22 +51,25 @@ import br.com.ecommerceorquideas.model.Login;
 import br.com.ecommerceorquideas.model.LoginAdmin;
 import br.com.ecommerceorquideas.model.Orquidea;
 import br.com.ecommerceorquideas.model.Produto;
+import br.com.ecommerceorquideas.strategy.AdmGeraCodigoAleatorio;
+import br.com.ecommerceorquideas.strategy.AdmVerificaData;
 import br.com.ecommerceorquideas.strategy.CarVerificaCadastro;
 import br.com.ecommerceorquideas.strategy.CliVerficaPreencTelefone;
-import br.com.ecommerceorquideas.strategy.PesVerificaCPF;
 import br.com.ecommerceorquideas.strategy.CliVerificaData;
-import br.com.ecommerceorquideas.strategy.PesVerificaEmail;
 import br.com.ecommerceorquideas.strategy.CliVerificaPreencSexo;
 import br.com.ecommerceorquideas.strategy.CliVerificaSenha;
+import br.com.ecommerceorquideas.strategy.ComInseriData;
+import br.com.ecommerceorquideas.strategy.ComVerificaUsoCartoes;
+import br.com.ecommerceorquideas.strategy.ComVerificaValor;
 import br.com.ecommerceorquideas.strategy.GenVerificaNome;
 import br.com.ecommerceorquideas.strategy.IStrategy;
-import br.com.ecommerceorquideas.strategy.ComInseriData;
+import br.com.ecommerceorquideas.strategy.PesVerificaCPF;
+import br.com.ecommerceorquideas.strategy.PesVerificaEmail;
 import br.com.ecommerceorquideas.warning.Aviso;
 
 public class Facade implements IFacade {
 
 	private Map<String, List<IStrategy>> rnSalvar;
-	private Map<String, List<IStrategy>> rnConsultar;
 	private Map<String, List<IStrategy>> rnAlterar;
 	private Map<String, IDAO> mapDAO;
 	private Map<String, IMapa> entityToMap;
@@ -187,11 +190,7 @@ public class Facade implements IFacade {
 		List<IStrategy> salvarLogin = new ArrayList<IStrategy>();
 		salvarLogin.add(new CliVerificaSenha());
 		rnSalvar.put(Login.class.getName(), salvarLogin);
-		
-		List<IStrategy> salvarPedido = new ArrayList<IStrategy>();
-		salvarPedido.add(new ComInseriData());
-		rnSalvar.put(Compra.class.getName(), salvarPedido);
-		
+				
 		List<IStrategy> salvarGenero = new ArrayList<IStrategy>();
 		salvarGenero.add(new GenVerificaNome());
 		rnSalvar.put(Genero.class.getName(), salvarGenero);
@@ -199,6 +198,12 @@ public class Facade implements IFacade {
 		List<IStrategy> salvarCartao = new ArrayList<IStrategy>();
 		salvarCartao.add(new CarVerificaCadastro());
 		rnSalvar.put(Cartao.class.getName(), salvarCartao);
+		
+		List<IStrategy> salvarCompra = new ArrayList<IStrategy>();
+		salvarCompra.add(new ComInseriData());
+		salvarCompra.add(new ComVerificaUsoCartoes());
+		salvarCompra.add(new ComVerificaValor());
+		rnSalvar.put(Compra.class.getName(), salvarCompra);
 		
 		//*****************ADMINISTRADOR**************************
 		List<IStrategy> salvarAdministrador = new ArrayList<IStrategy>();
@@ -210,6 +215,11 @@ public class Facade implements IFacade {
 		List<IStrategy> salvarLoginAdmin = new ArrayList<IStrategy>();
 		salvarLoginAdmin.add(new CliVerificaSenha());
 		rnSalvar.put(LoginAdmin.class.getName(), salvarLoginAdmin);
+		
+		List<IStrategy> salvarCupomAdmin = new ArrayList<IStrategy>();
+		salvarCupomAdmin.add(new AdmGeraCodigoAleatorio());
+		salvarCupomAdmin.add(new AdmVerificaData());
+		rnSalvar.put(CupomAdmin.class.getName(), salvarCupomAdmin);
 		
 		// **************alterar*******************
 

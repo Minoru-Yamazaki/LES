@@ -29,7 +29,8 @@ public class GeraSQL {
 
 	public static boolean isId(String palavra) {
 		List<String> numeros = new ArrayList<String>();
-		numeros.add("ativo"); 
+		numeros.add("adm_id");
+		numeros.add("ativo");
 		numeros.add("cli_id");
 		numeros.add("id");
 		numeros.add("id!");

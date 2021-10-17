@@ -50,6 +50,7 @@ public class Orquidea extends EntidadeDominio{
 		this.categoriaInativacao = categoriaInativacao;
 		this.justificativaInativacao = justificativaInativacao;
 		this.quantidade = quantidade;
+		this.cor = cor;
 		this.valorCusto = valorCusto;
 		this.valorVenda = valorVenda;
 		this.codigoBarras = codigoBarras;

@@ -27,4 +27,13 @@ public class Cupom extends EntidadeDominio{
 		this.validade = validade;
 		this.cliId = cliId;
 	}
+	
+	public Cupom(String nome, String descricao, String tipoCupom, Double valor, Date validade, Integer cliId) {
+		this.nome = nome;
+		this.descricao = descricao;
+		this.tipoCupom = tipoCupom;
+		this.valor = valor;
+		this.validade = validade;
+		this.cliId = cliId;
+	}
 }

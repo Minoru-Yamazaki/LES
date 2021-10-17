@@ -26,7 +26,7 @@ public class Compra extends EntidadeDominio{
 	private String cep;	
 	private Integer cliId;
 	private List<Produto> produtos;
-	private List<CuponsCompra> cupons;
+	private List<CupomCompra> cupons;
 	private List<CartoesCompra> cartoes;
 	
 	public Compra() {}

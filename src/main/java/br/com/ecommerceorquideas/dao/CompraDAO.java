@@ -12,7 +12,7 @@ import java.util.List;
 
 import br.com.ecommerceorquideas.model.CartoesCompra;
 import br.com.ecommerceorquideas.model.Compra;
-import br.com.ecommerceorquideas.model.CuponsCompra;
+import br.com.ecommerceorquideas.model.CupomCompra;
 import br.com.ecommerceorquideas.model.EntidadeDominio;
 import br.com.ecommerceorquideas.model.Produto;
 import br.com.ecommerceorquideas.util.Conexao;
@@ -39,8 +39,9 @@ public class CompraDAO implements IDAO{
 	
 	@Override
 	public Object salvar(EntidadeDominio entidade) throws SQLException {
-		Compra pedido = (Compra) entidade;
+		Compra compra = (Compra) entidade;
 		aviso = new Aviso();
+		IDAO dao;
 
 		try {
 			connection = Conexao.getConnection();
@@ -48,30 +49,51 @@ public class CompraDAO implements IDAO{
 
 			preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
 
-			preparedStatement.setString(1, pedido.getStatus());
-			Timestamp time = new Timestamp(pedido.getData().getTime());
+			preparedStatement.setString(1, compra.getStatus());
+			Timestamp time = new Timestamp(compra.getData().getTime());
 			preparedStatement.setTimestamp(2, time);
-			preparedStatement.setDouble(3, pedido.getValor());
-			preparedStatement.setDouble(4, pedido.getFrete());
-			preparedStatement.setString(5, pedido.getCidade());
-			preparedStatement.setString(6, pedido.getEstado());
-			preparedStatement.setString(7, pedido.getPais());
-			preparedStatement.setString(8, pedido.getBairro());
-			preparedStatement.setString(9, pedido.getTipoLogradouro());
-			preparedStatement.setString(10, pedido.getLogradouro());
-			preparedStatement.setString(11, pedido.getNumero());
-			preparedStatement.setString(12, pedido.getComplemento());
-			preparedStatement.setString(13, pedido.getTipoResidencia());
-			preparedStatement.setString(14, pedido.getCep());
-			preparedStatement.setInt(15, pedido.getCliId());
+			preparedStatement.setDouble(3, compra.getValor());
+			preparedStatement.setDouble(4, compra.getFrete());
+			preparedStatement.setString(5, compra.getCidade());
+			preparedStatement.setString(6, compra.getEstado());
+			preparedStatement.setString(7, compra.getPais());
+			preparedStatement.setString(8, compra.getBairro());
+			preparedStatement.setString(9, compra.getTipoLogradouro());
+			preparedStatement.setString(10, compra.getLogradouro());
+			preparedStatement.setString(11, compra.getNumero());
+			preparedStatement.setString(12, compra.getComplemento());
+			preparedStatement.setString(13, compra.getTipoResidencia());
+			preparedStatement.setString(14, compra.getCep());
+			preparedStatement.setInt(15, compra.getCliId());
 			
 			preparedStatement.executeUpdate();
 
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 
 			if (rs.next()) {
-				pedido.setId(rs.getInt(1));
+				compra.setId(rs.getInt(1));
 			}
+			if(!compra.getCupons().isEmpty()) {
+				dao = new CupomCompraDAO(connection);
+				for(CupomCompra cupom : compra.getCupons()) {
+					cupom.setIdCompra(compra.getId());
+					dao.salvar(cupom);
+				}
+			}
+			if(!compra.getCartoes().isEmpty()) {
+				dao = new CartoesCompraDAO(connection);
+				for(CartoesCompra cartao : compra.getCartoes()) {
+					cartao.setIdCompra(compra.getId());
+					dao.salvar(cartao);
+				}
+			}
+			if(!compra.getProdutos().isEmpty()) {
+				dao = new ProdutoDAO(connection);
+				for(Produto produto : compra.getProdutos()) {
+					produto.setIdCompra(compra.getId());
+					dao.salvar(produto);
+				}
+			}			
 
 			preparedStatement.close();
 			connection.commit();
@@ -160,6 +182,8 @@ public class CompraDAO implements IDAO{
 				connection.setAutoCommit(false);
 				commit = true;
 			}
+			exluirDados(connection, id);
+			
 			preparedStatement = connection.prepareStatement(DELETE);
 
 			preparedStatement.setInt(1, id);
@@ -218,8 +242,8 @@ public class CompraDAO implements IDAO{
 				dao = new ProdutoDAO(connection);
 				compra.setProdutos((List<Produto>) dao.consultar(map));
 				
-				dao = new CuponsCompraDAO(connection);
-				compra.setCupons((List<CuponsCompra>) dao.consultar(map));
+				dao = new CupomCompraDAO(connection);
+				compra.setCupons((List<CupomCompra>) dao.consultar(map));
 				
 				dao = new CartoesCompraDAO(connection);
 				compra.setCartoes((List<CartoesCompra>) dao.consultar(map));
@@ -233,6 +257,36 @@ public class CompraDAO implements IDAO{
 			e.printStackTrace();
 		}
 		return compras;
+	}
+	
+	private void exluirDados(Connection connection, Integer id) throws SQLException {
+		
+		try {
+			IDAO dao;
+
+			HashMap<String, String> map = new HashMap<>();
+			map.put("com_id", id.toString());
+			dao = new CupomCompraDAO(connection);
+			List<CupomCompra> cupons = (List<CupomCompra>) dao.consultar(map);
+			for (CupomCompra cupom : cupons) {
+				dao.excluir(cupom.getId());
+			}
+
+			dao = new ProdutoDAO(connection);
+			List<Produto> produtos = (List<Produto>) dao.consultar(map);
+			for (Produto produto : produtos) {
+				dao.excluir(produto.getId());
+			}
+			
+			dao = new CartoesCompraDAO(connection);
+			List<CartoesCompra> cartoes = (List<CartoesCompra>) dao.consultar(map);
+			for (CartoesCompra cartao : cartoes) {
+				dao.excluir(cartao.getId());
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+		
 	}
 
 }

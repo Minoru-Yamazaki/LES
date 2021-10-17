@@ -9,7 +9,7 @@ import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class CompraVH implements IViewHelper{
 
-	private Compra pedido = new Compra();
+	private Compra compra = new Compra();
 	
 	@Override
 	public EntidadeDominio jsonToEntidade(String json) {
@@ -17,11 +17,11 @@ public class CompraVH implements IViewHelper{
 		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
-			pedido = mapper.readValue(json, Compra.class);
+			compra = mapper.readValue(json, Compra.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return pedido;
+		return compra;
 	}
 
 }
