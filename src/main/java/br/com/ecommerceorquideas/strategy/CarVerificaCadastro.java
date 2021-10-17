@@ -6,8 +6,8 @@ import java.util.List;
 
 import br.com.ecommerceorquideas.dao.CartaoDAO;
 import br.com.ecommerceorquideas.dao.IDAO;
-import br.com.ecommerceorquideas.domain.Cartao;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Cartao;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class CarVerificaCadastro implements IStrategy{
 

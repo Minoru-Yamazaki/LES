@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.domain.Imagem;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Imagem;
 
 public class ImagemVH implements IViewHelper {
 

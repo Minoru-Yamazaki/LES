@@ -1,6 +1,6 @@
 package br.com.ecommerceorquideas.facade;
 
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public interface IFacade {
 	

@@ -1,6 +1,6 @@
 package br.com.ecommerceorquideas.viewhelper;
 
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public interface IViewHelper {
 

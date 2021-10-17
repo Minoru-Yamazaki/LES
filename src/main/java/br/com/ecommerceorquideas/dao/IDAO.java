@@ -3,7 +3,7 @@ package br.com.ecommerceorquideas.dao;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public interface IDAO {
 

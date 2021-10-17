@@ -3,8 +3,8 @@ package br.com.ecommerceorquideas.strategy;
 import java.util.Arrays;
 import java.util.List;
 
-import br.com.ecommerceorquideas.domain.Cliente;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Cliente;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class CliVerificaPreencSexo implements IStrategy{
 

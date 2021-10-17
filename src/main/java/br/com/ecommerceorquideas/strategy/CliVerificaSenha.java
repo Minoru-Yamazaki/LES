@@ -3,15 +3,19 @@ package br.com.ecommerceorquideas.strategy;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.ecommerceorquideas.domain.Cliente;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.domain.Login;
+import br.com.ecommerceorquideas.model.Administrador;
+import br.com.ecommerceorquideas.model.Cliente;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Login;
+import br.com.ecommerceorquideas.model.LoginAdmin;
 
 public class CliVerificaSenha implements IStrategy{
 		
 	@Override
 	public List<String> processar(EntidadeDominio entidade) {
-		String classeCliente = "br.com.ecommerceorquideas.domain.Cliente";
+		String classeCliente = Cliente.class.getName();
+		String classeLoginAdmin = LoginAdmin.class.getName();
+		String classeAdministrador = Administrador.class.getName();
 		String senha = "";
 		String confirmaSenha = "";
 		
@@ -19,7 +23,16 @@ public class CliVerificaSenha implements IStrategy{
 			Cliente cliente = (Cliente) entidade;
 			senha = cliente.getLogin().getSenha();
 			confirmaSenha = cliente.getLogin().getSenhaConfirm();
+		}else if(entidade.getClass().getName().equals(classeLoginAdmin)){
+			LoginAdmin login = (LoginAdmin) entidade;
+			senha = login.getSenha();
+			confirmaSenha = login.getSenhaConfirm();
+		}else if(entidade.getClass().getName().equals(classeAdministrador)){
+			Administrador admin = (Administrador) entidade;
+			senha = admin.getLogin().getSenha();
+			confirmaSenha = admin.getLogin().getSenhaConfirm();
 		}else {
+			System.out.println(entidade);
 			Login login = (Login) entidade;
 			senha = login.getSenha();
 			confirmaSenha = login.getSenhaConfirm();

@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import org.apache.commons.codec.binary.Base64;
 
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.domain.Login;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Login;
 
 public class LoginMapa implements IMapa{
 

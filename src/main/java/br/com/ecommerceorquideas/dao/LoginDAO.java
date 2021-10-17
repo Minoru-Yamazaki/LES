@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.domain.Login;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Login;
 import br.com.ecommerceorquideas.util.Conexao;
 import br.com.ecommerceorquideas.util.GeraSQL;
 import br.com.ecommerceorquideas.warning.Aviso;

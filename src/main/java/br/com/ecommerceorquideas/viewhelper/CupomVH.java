@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.ecommerceorquideas.domain.Cupom;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Cupom;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class CupomVH implements IViewHelper{
 

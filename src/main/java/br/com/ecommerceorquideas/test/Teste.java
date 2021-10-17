@@ -7,8 +7,9 @@ import org.apache.commons.codec.binary.Base64;
 import br.com.ecommerceorquideas.dao.CartoesCompraDAO;
 import br.com.ecommerceorquideas.dao.CuponsCompraDAO;
 import br.com.ecommerceorquideas.dao.IDAO;
-import br.com.ecommerceorquideas.domain.CartoesCompra;
-import br.com.ecommerceorquideas.domain.CuponsCompra;
+import br.com.ecommerceorquideas.model.Administrador;
+import br.com.ecommerceorquideas.model.CartoesCompra;
+import br.com.ecommerceorquideas.model.CuponsCompra;
 
 public class Teste {
 
@@ -36,12 +37,7 @@ public class Teste {
     }
     
     public static void main(String[] args) throws SQLException {
-    	IDAO dao = new CartoesCompraDAO();
-    	
-    	CartoesCompra cartoes = new CartoesCompra();
-    	cartoes.setId(2);
-    	
-    	dao.excluir(3);
+    	System.out.println(Administrador.class.getName());
     }
 	
 

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import br.com.ecommerceorquideas.domain.Cor;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
-import br.com.ecommerceorquideas.domain.Genero;
+import br.com.ecommerceorquideas.model.Cor;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Genero;
 import br.com.ecommerceorquideas.util.Conexao;
 import br.com.ecommerceorquideas.util.GeraSQL;
 import br.com.ecommerceorquideas.warning.Aviso;

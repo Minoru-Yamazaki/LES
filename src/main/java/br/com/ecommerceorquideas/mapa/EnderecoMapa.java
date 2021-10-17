@@ -2,8 +2,8 @@ package br.com.ecommerceorquideas.mapa;
 
 import java.util.HashMap;
 
-import br.com.ecommerceorquideas.domain.Endereco;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Endereco;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class EnderecoMapa implements IMapa{
 

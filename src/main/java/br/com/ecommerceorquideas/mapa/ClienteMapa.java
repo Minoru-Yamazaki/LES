@@ -2,8 +2,8 @@ package br.com.ecommerceorquideas.mapa;
 
 import java.util.HashMap;
 
-import br.com.ecommerceorquideas.domain.Cliente;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Cliente;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class ClienteMapa implements IMapa{
 

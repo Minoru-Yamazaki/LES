@@ -17,16 +17,19 @@ import br.com.ecommerceorquideas.command.ConsultarCommand;
 import br.com.ecommerceorquideas.command.ExcluirCommand;
 import br.com.ecommerceorquideas.command.ICommand;
 import br.com.ecommerceorquideas.command.SalvarCommand;
-import br.com.ecommerceorquideas.domain.EntidadeDominio;
+import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.viewhelper.AdministradorVH;
 import br.com.ecommerceorquideas.viewhelper.CartaoVH;
 import br.com.ecommerceorquideas.viewhelper.ClienteVH;
 import br.com.ecommerceorquideas.viewhelper.CompraVH;
 import br.com.ecommerceorquideas.viewhelper.CorVH;
+import br.com.ecommerceorquideas.viewhelper.CupomAdminVH;
 import br.com.ecommerceorquideas.viewhelper.CupomVH;
 import br.com.ecommerceorquideas.viewhelper.EnderecoVH;
 import br.com.ecommerceorquideas.viewhelper.GeneroVH;
 import br.com.ecommerceorquideas.viewhelper.IViewHelper;
 import br.com.ecommerceorquideas.viewhelper.ImagemVH;
+import br.com.ecommerceorquideas.viewhelper.LoginAdminVH;
 import br.com.ecommerceorquideas.viewhelper.LoginVH;
 import br.com.ecommerceorquideas.viewhelper.OrquideaVH;
 import br.com.ecommerceorquideas.viewhelper.ProdutoVH;
@@ -81,6 +84,8 @@ public class Controller {
 		vhs.put("imagem", new ImagemVH());
 		vhs.put("cor", new CorVH());
 		vhs.put("genero", new GeneroVH());
+		vhs.put("admcupom", new CupomAdminVH());
+		vhs.put("admlogin", new LoginAdminVH());
+		vhs.put("administrador", new AdministradorVH());
 	}
-
 }
