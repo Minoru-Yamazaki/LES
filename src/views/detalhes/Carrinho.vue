@@ -17,10 +17,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="produto in compra.produtos" :key="produto.pro_id">
+              <tr v-for="produto in compra.produtos" :key="produto.idProduto">
                 <td>
                   <router-link
-                    :to="{path: '/detalhes-orquidea/' + produto.pro_id}"
+                    :to="{ path: '/detalhes-orquidea/' + produto.idProduto }"
                   >
                     <i>{{ produto.nome }}</i>
                   </router-link>
@@ -51,7 +51,7 @@
                   <button
                     v-on:click="
                       consultarOrquidea(
-                        produto.pro_id,
+                        produto.idProduto,
                         compra.produtos.indexOf(produto)
                       )
                     "
@@ -62,12 +62,12 @@
                   </button>
                 </td>
                 <td>
-                  <i v-if="produto.sub_total"> {{ produto.sub_total }} </i>
+                  <i v-if="produto.subTotal"> {{ produto.subTotal }} </i>
                   <i v-else>
                     {{
                       (compra.produtos[
                         compra.produtos.indexOf(produto)
-                      ].sub_total =
+                      ].subTotal =
                         compra.produtos[compra.produtos.indexOf(produto)]
                           .quantidade * produto.preco)
                     }}
@@ -107,6 +107,30 @@
                 class="form-control"
                 v-model="codigoCupomPromocional"
               />
+            </div>
+            <div class="col-sm-2">
+              <input
+                type="text"
+                class="form-control"
+                v-model="valorCupomPromocional"
+                disabled
+              />
+            </div>
+            <div class="col-sm-4">
+              <button
+                class="btn btn-success"
+                v-on:click="consultarCupom(codigoCupomPromocional)"
+              >
+                <i class="fas fa-plus"></i>
+                adicionar
+              </button>
+              <button
+                class="btn btn-danger ml-2"
+                v-on:click="removerCupomPromocional()"
+              >
+                <i class="fas fa-minus"></i>
+                remover
+              </button>
             </div>
           </div>
           <div class="row mb-3">
@@ -188,6 +212,8 @@
                   />
                 </tr>
               </table>
+
+              {{ compra }}
             </div>
             <div class="col-sm-3">
               <router-link to="/cadastro-cartao">
@@ -275,6 +301,7 @@
 
 <script>
 import NavLogin from "../../components/shared/nav/NavComponent.vue";
+import clienteService from "../../_services/clienteServices.js";
 
 export default {
   name: "Carrinho",
@@ -286,7 +313,7 @@ export default {
   data() {
     return {
       compra: {
-        status: "Em processamento",
+        status: "Aprovada",
         data: null,
         valor: 0,
         frete: 0,
@@ -294,13 +321,13 @@ export default {
         estado: null,
         pais: null,
         bairro: null,
-        tipo_logradouro: null,
+        tipoLogradouro: null,
         logradouro: null,
         numero: null,
         complemento: null,
-        tipo_residencia: null,
+        tipoResidencia: null,
         cep: null,
-        cli_id: null,
+        cliId: null,
         cupons: [],
         produtos: [],
         cartoes: [],
@@ -308,7 +335,12 @@ export default {
       orquideas: [],
       cupons: [],
       cartoes: [],
-
+      cartoesCadastrados: [
+        { numero: "1321312313213213", ativo: true },
+        { numero: "8979398619886519", ativo: false },
+        { numero: "5646545642198896", ativo: true },
+      ],
+      valorCupomPromocional: null,
       codigoCupomPromocional: null,
       total: 0,
       cliente: null,
@@ -355,11 +387,25 @@ export default {
         total: cartao.total,
         idCartao: cartao.id,
       };
-      this.compra.cartoes.push(Cartao);
+      if (cartao.total != 0) {
+        this.compra.cartoes.push(Cartao);
+      }
     },
     verificaCuponsUsados() {
+      let cupomPromo;
+      for (const cupom of this.compra.cupons) {
+        if (cupom.tipoCupom == "promocional") {
+          cupomPromo = cupom;
+        }
+      }
       this.compra.cupons = [];
+
+      if (cupomPromo) {
+        this.compra.cupons.push(cupomPromo);
+      }
+
       for (const cupom of this.cupons) {
+        //adiciona cupons a lista de compra, conforme o array cupons
         for (const cupomCliente of this.cliente.cupons) {
           if (cupom == cupomCliente.nome) {
             this.adicionaCupom(cupomCliente);
@@ -375,13 +421,35 @@ export default {
         tipoCupom: cupom.tipoCupom,
         valor: cupom.valor,
         idCupom: cupom.id,
+        validade: cupom.validade,
       };
-      this.compra.cupons.push(Cupom);
+      if (cupom.tipoCupom == "promocional") {
+        if (!this.temCupomPromocional()) {
+          this.valorCupomPromocional = cupom.valor;
+          this.compra.cupons.push(Cupom);
+          alert("cupom adicionado");
+
+          this.calculaTotal();
+        } else {
+          alert("Já existe um cupom promocinal");
+        }
+      } else {
+        this.compra.cupons.push(Cupom);
+      }
+    },
+    temCupomPromocional() {
+      for (const cup of this.compra.cupons) {
+        if (cup.tipoCupom == "promocional") {
+          return 1;
+        }
+      }
+      return 0;
     },
     carregaInfos() {
       try {
         this.cliente = JSON.parse(localStorage.getItem("cliente"));
         this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
+        this.compra.cliId = this.cliente.id;
       } catch (error) {
         console.log(error);
       }
@@ -391,22 +459,71 @@ export default {
         cartao.total = 0;
       }
     },
-    finalizaCompra() {},
+    finalizaCompra() {
+      if (this.calcularFrete() && this.verificaCartao()) {
+        this.preencheEndereco(this.compra.cep);
+        this.salvarCompra();
+      }
+    },
+    salvarCompra() {
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(this.compra), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/salvar-compra", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          var mensagem = "";
+
+          for (var x in data.mensagens) {
+            mensagem += "\n" + data.mensagens[x];
+          }
+          alert(mensagem);
+        })
+        .then(() => {
+          clienteService.consultarCliente();
+        });
+    },
+    verificaCartao() {
+      let mensagem = "";
+      for (const cartao of this.compra.cartoes) {
+        for (const cartaoCadastrado of this.cartoesCadastrados) {
+          if (
+            cartao.numero == cartaoCadastrado.numero &&
+            cartaoCadastrado.ativo == false
+          ) {
+            mensagem += "cartão " + cartao.numero + " recusado\n";
+          }
+        }
+      }
+      if (mensagem) {
+        alert(mensagem);
+        return 0;
+      }
+      return 1;
+    },
     calcularFrete() {
       this.compra.frete = 0;
       for (const frete of this.fretes) {
         if (this.compra.cep == frete.cep) {
           this.compra.frete = frete.valor;
+          this.calculaTotal();
+          return 1;
         }
       }
       if (this.compra.frete == 0) {
         alert("CEP Inválido");
+        this.calculaTotal();
+        return 0;
       }
-      this.calculaTotal();
     },
     aumentaQtde(index, preco) {
       this.compra.produtos[index].quantidade++;
-      this.compra.produtos[index].sub_total =
+      this.compra.produtos[index].subTotal =
         preco * this.compra.produtos[index].quantidade;
       this.calculaSubTotal();
       this.calculaTotal();
@@ -416,7 +533,7 @@ export default {
     diminuiQtde(index, preco) {
       if (this.compra.produtos[index].quantidade > 1) {
         this.compra.produtos[index].quantidade--;
-        this.compra.produtos[index].sub_total =
+        this.compra.produtos[index].subTotal =
           preco * this.compra.produtos[index].quantidade;
         this.calculaSubTotal();
         this.calculaTotal();
@@ -436,7 +553,7 @@ export default {
       this.compra.valor = 0;
       try {
         for (const produto of this.compra.produtos) {
-          this.compra.valor += produto.sub_total;
+          this.compra.valor += produto.subTotal;
         }
       } catch (error) {
         return 0;
@@ -476,6 +593,57 @@ export default {
             alert(data[0].mensagens);
           }
         });
+    },
+    consultarCupom(codigo) {
+      if (codigo) {
+        const json = {
+          codigo: codigo,
+        };
+
+        const postMethod = {
+          method: "POST", // Method itself
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          },
+          body: JSON.stringify(json), // We send data in JSON format
+        };
+
+        fetch("http://localhost:8080/consultar-admcupom", postMethod)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data[0].id != null) {
+              this.adicionaCupom(data[0]);
+            } else {
+              alert(data[0].mensagens);
+            }
+          });
+      }
+    },
+    removerCupomPromocional() {
+      for (const indice in this.compra.cupons) {
+        if (this.compra.cupons[indice].tipoCupom == "promocional") {
+          this.compra.cupons.splice(indice, 1);
+        }
+      }
+      this.valorCupomPromocional = 0;
+      this.codigoCupomPromocional = null;
+      this.calculaTotal();
+    },
+    preencheEndereco(cep) {
+      for (const endereco of this.cliente.enderecos) {
+        if (cep == endereco.cep) {
+          this.compra.cidade = endereco.cidade;
+          this.compra.estado = endereco.estado;
+          this.compra.pais = endereco.pais;
+          this.compra.bairro = endereco.bairro;
+          this.compra.tipoLogradouro = endereco.tipoLogradouro;
+          this.compra.logradouro = endereco.logradouro;
+          this.compra.numero = endereco.numero;
+          this.compra.complemento = endereco.complemento;
+          this.compra.tipoResidencia = endereco.tipoResidencia;
+          this.compra.cep = endereco.cep;
+        }
+      }
     },
   },
 };
