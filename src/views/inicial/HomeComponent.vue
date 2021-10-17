@@ -98,7 +98,7 @@
                 <router-link
                   :to="{ path: '/detalhes-orquidea/' + orquidea.id }"
                 >
-                  <i class="fa fa-info"></i>
+                  <i class="fa fa-info text-dark"></i>
                 </router-link>
 
                 <i class="h5 ml-2">R$ {{ orquidea.valorVenda }}</i>
@@ -208,7 +208,7 @@ export default {
         let tem = false;
 
         for (let produtos of this.produtos) {
-          if (produtos.pro_id == id) {
+          if (produtos.idProduto == id) {
             tem = true;
           }
         }
@@ -238,12 +238,12 @@ export default {
         .then((data) => {
           if (data[0].id != null) {
             let produto = {
-              pro_id: data[0].id,
+              idProduto: data[0].id,
               preco: data[0].valorVenda,
               nome: data[0].nome,
               descricao: data[0].descricao,
               quantidade: 1,
-              sub_total: data[0].valorVenda,
+              subTotal: data[0].valorVenda,
             };
             this.produtos.push(produto);
             localStorage.setItem("produtos", JSON.stringify(this.produtos));

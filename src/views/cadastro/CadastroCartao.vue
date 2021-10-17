@@ -123,13 +123,19 @@ export default {
       fetch("http://localhost:8080/salvar-cartao", postMethod)
         .then((response) => response.json())
         .then((data) => {
-          alert(data.mensagens);
+          var mensagem = "";
+          for (var x in data.mensagens) {
+            if (data.mensagens[x] == "Salvo com sucesso") {
+              window.location.href = "/#/login";
+            }
+            mensagem += "\n" + data.mensagens[x];
+          }
+          alert(mensagem);
         })
         .then(() => {
-          clienteService.consultarCliente()
-          .then(() => {
-              this.$router.push({ path: "/minha-conta/cartoes" });
-            });
+          clienteService.consultarCliente().then(() => {
+            this.$router.push({ path: "/minha-conta/cartoes" });
+          });
         });
     },
   },
