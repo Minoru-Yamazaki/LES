@@ -22,10 +22,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="produto in cliente.pedidos[getIndex()].produtos"
-                :key="produto.id"
-              >
+              <tr v-for="produto in compra.produtos" :key="produto.id">
                 <td>{{ produto.idProduto }}</td>
                 <td>{{ produto.preco }}</td>
                 <td>{{ produto.nome }}</td>
@@ -53,19 +50,42 @@ export default {
   data() {
     return {
       cliente: null,
-      idCompra: null,
+      idPedido: null,
+      compra: {
+        produtos: [],
+      },
     };
   },
   created() {
-    this.cliente = JSON.parse(localStorage.getItem("cliente"));
-    this.idCompra = localStorage.getItem("idCompra");
+    this.idPedido = localStorage.getItem("idPedido");
+    this.consultarCompra();
   },
   methods: {
     voltar() {
       this.$router.push({ path: "/pedidos" });
     },
-    getIndex() {
-      return localStorage.getItem("indexPedido");
+    consultarCompra() {
+      const json = {
+        id: this.idPedido, //JSON.parse(localStorage.getItem("idOrquidea"))
+      };
+
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(json), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-compra", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.compra = data[0];
+          } else {
+            alert(data[0].mensagens);
+          }
+        });
     },
   },
 };
