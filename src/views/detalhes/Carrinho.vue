@@ -213,7 +213,7 @@
                 </tr>
               </table>
 
-              {{ compra }}
+              <!-- {{ compra }} -->
             </div>
             <div class="col-sm-3">
               <router-link to="/cadastro-cartao">
