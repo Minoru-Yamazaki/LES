@@ -232,10 +232,10 @@ public class CompraDAO implements IDAO{
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				compra = new Compra(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getDouble(4),
-						rs.getDouble(5), rs.getString(6), rs.getString(7), rs.getString(8),
-						rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12),
-						rs.getString(13), rs.getString(14), rs.getString(15), rs.getInt(16));
+				compra = new Compra(rs.getInt(1), rs.getString(3), rs.getDate(4), rs.getDouble(5),
+						rs.getDouble(6), rs.getString(7), rs.getString(8), rs.getString(9),
+						rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13),
+						rs.getString(14), rs.getString(15), rs.getString(16), rs.getInt(17));
 				
 				map = new HashMap<>();
 				map.put("com_id", compra.getId().toString());

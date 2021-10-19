@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Compra extends EntidadeDominio{
 	
 	private String status;
+	private Integer ativo;
 	private Date data;
 	private Double valor;
 	private Double frete;

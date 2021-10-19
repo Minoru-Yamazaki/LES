@@ -14,6 +14,8 @@ public class CompraMapa implements IMapa{
 		
 		if(pedido.getId() != null)
 			map.put("id", pedido.getId().toString());
+		if(pedido.getAtivo() != null)
+			map.put("ativo", pedido.getAtivo().toString());
 		if(pedido.getStatus() != null)
 			map.put("status", pedido.getStatus());
 		if(pedido.getData() != null)
