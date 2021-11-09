@@ -21,6 +21,7 @@ import AdminCupons from '../views/detalhes/AdminCupons.vue'
 import AdminPedidos from '../views/detalhes/AdminPedidos.vue'
 import Cupom from '../views/detalhes/Cupom.vue'
 import AdminDetalhesPedido from '../views/detalhes/AdminDetalhesPedido.vue'
+import Mensagens from '../views/detalhes/Mensagens.vue'
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,7 @@ const routes = [
   { path: '/detalhes-pedido', component: DetalhesPedidos },
   { path: '/detalhes-cupom', component: Cupom },
   { path: '/pedidos', component: Pedidos },
+  { path: '/mensagens', component: Mensagens },
   { path: '/admin-pedidos', component: AdminPedidos },
   { path: '/admin-detalhes-pedido', component: AdminDetalhesPedido },
   { path: '/admin-cupons', component: AdminCupons },

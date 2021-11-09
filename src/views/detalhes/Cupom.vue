@@ -18,7 +18,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="cupom in cliente.cupons" :key="cupom.id">
+              <tr v-for="cupom in cupons" :key="cupom.id">
                 <td>{{ cupom.nome }}</td>
                 <td>{{ cupom.descricao }}</td>
                 <td>{{ cupom.tipoCupom }}</td>
@@ -45,12 +45,35 @@ export default {
 
   data() {
     return {
-      cliente: null,
+      login: null,
+      cupons: null,
     };
   },
   created() {
-    this.cliente = JSON.parse(localStorage.getItem("cliente"));
+    this.login = JSON.parse(localStorage.getItem("login"));
+    this.consultarCupons();
   },
-  methods: {},
+  methods: {
+    consultarCupons() {
+      const cupom = {
+        cliId: this.login.id,
+      };
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(cupom), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-cupom", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.cupons = data;
+          }
+        });
+    },
+  },
 };
 </script>

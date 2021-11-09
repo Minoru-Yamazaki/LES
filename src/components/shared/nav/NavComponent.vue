@@ -10,6 +10,9 @@
         <router-link class="mx-3 text-white" to="/minha-conta">
           <i class="fa fa-user fa-2x"></i>
         </router-link>
+        <router-link class="mx-3 text-white" to="/mensagens">
+          <i class="fa fa-envelope fa-2x"></i>
+        </router-link>
         <router-link class="mx-3 text-white" to="/detalhes-carrinho">
           <i class="fa fa-shopping-cart fa-2x"></i>
         </router-link>
@@ -54,6 +57,8 @@ export default {
       localStorage.removeItem("idOrquidea");
       localStorage.removeItem("compra");
       localStorage.removeItem("produtos");
+      localStorage.removeItem("status");
+      localStorage.removeItem("idPedido");
     },
   },
 };

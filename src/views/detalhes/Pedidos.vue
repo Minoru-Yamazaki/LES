@@ -17,19 +17,29 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="pedido in cliente.pedidos" :key="pedido.id">
+              <tr v-for="pedido in pedidos" :key="pedido.id">
                 <td>{{ pedido.status }}</td>
                 <td>{{ pedido.data }}</td>
-                <td>R$ {{ pedido.valor }}</td>
+                <td>R$ {{ pedido.valor + pedido.frete }}</td>
                 <td>
                   <button
-                    v-on:click="
-                      visualizarCompra(cliente.pedidos.indexOf(pedido))
-                    "
+                    v-on:click="visualizarCompra(pedido.id, pedido.status)"
                     type="button"
                     class="btn btn-primary"
                   >
                     ver compra
+                  </button>
+                </td>
+                <td>
+                  <button
+                    v-if="verificaStatus(pedido.status)"
+                    v-on:click="
+                      alterarCompra(pedido, 'Cancelamento solicitado')
+                    "
+                    type="button"
+                    class="btn btn-danger ml-3"
+                  >
+                    cancelar pedido
                   </button>
                 </td>
               </tr>
@@ -53,16 +63,78 @@ export default {
 
   data() {
     return {
+      pedidos: null,
       cliente: null,
     };
   },
   created() {
-    this.cliente = JSON.parse(localStorage.getItem("cliente"));
+    this.carregaInfos();
+    this.consultarCompra();
   },
   methods: {
-    visualizarCompra(index) {
-      localStorage.setItem("indexPedido", index);
+    visualizarCompra(id, status) {
+      localStorage.setItem("idPedido", id);
+      localStorage.setItem("status", status);
       this.$router.push({ path: "/detalhes-pedido" });
+    },
+    carregaInfos() {
+      try {
+        this.cliente = JSON.parse(localStorage.getItem("cliente"));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    consultarCompra(compra) {
+      console.log(this.cliente.id);
+      if (!compra) {
+        compra = {
+          cliId: this.cliente.id,
+        };
+      }
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(compra), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-compra", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.pedidos = data;
+          } else {
+            alert(data[0].mensagens);
+          }
+        });
+    },
+    verificaStatus(status) {
+      if (status == "Aprovada" || status == "Separando pedido") {
+        return 1;
+      }
+      return 0;
+    },
+    alterarCompra(compra, status) {
+      const resposta = confirm("Cancelar Pedido?");
+
+      if (resposta) {
+        compra.status = status;
+
+        const postMethod = {
+          method: "POST", // Method itself
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          },
+          body: JSON.stringify(compra), // We send data in JSON format
+        };
+
+        fetch("http://localhost:8080/alterar-compra", postMethod)
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.mensagens[0]);
+          });
+      }
     },
   },
 };

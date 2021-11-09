@@ -285,6 +285,7 @@
             <div class="col-sm-3">
               <button
                 v-on:click="finalizaCompra()"
+                id="finalizarCompra"
                 type="button"
                 class="btn btn-success"
               >
@@ -339,6 +340,7 @@ export default {
         { numero: "1321312313213213", ativo: true },
         { numero: "8979398619886519", ativo: false },
         { numero: "5646545642198896", ativo: true },
+        { numero: "6449845646549846", ativo: true },
       ],
       valorCupomPromocional: null,
       codigoCupomPromocional: null,
@@ -448,8 +450,6 @@ export default {
     carregaInfos() {
       try {
         this.cliente = JSON.parse(localStorage.getItem("cliente"));
-        this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
-        this.compra.cliId = this.cliente.id;
       } catch (error) {
         console.log(error);
       }

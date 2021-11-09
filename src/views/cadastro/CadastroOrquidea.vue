@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h1>teste</h1>
+    <h1>teste</h1>
   </div>
 </template>
 
@@ -8,14 +8,11 @@
 export default {
   name: "CadastroOrquidea",
   data() {
-    return {
-    }
+    return {};
   },
-  created(){
-  },
+  created() {},
   methods: {
-    click() {
-    },
+    click() {},
   },
 };
 </script>
