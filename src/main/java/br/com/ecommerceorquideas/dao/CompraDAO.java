@@ -15,6 +15,7 @@ import br.com.ecommerceorquideas.model.Compra;
 import br.com.ecommerceorquideas.model.CupomCompra;
 import br.com.ecommerceorquideas.model.EntidadeDominio;
 import br.com.ecommerceorquideas.model.Produto;
+import br.com.ecommerceorquideas.model.Troca;
 import br.com.ecommerceorquideas.util.Conexao;
 import br.com.ecommerceorquideas.util.GeraSQL;
 import br.com.ecommerceorquideas.warning.Aviso;
@@ -248,6 +249,9 @@ public class CompraDAO implements IDAO{
 				dao = new CartoesCompraDAO(connection);
 				compra.setCartoes((List<CartoesCompra>) dao.consultar(map));
 				
+				dao = new TrocaDAO(connection);
+				compra.setTrocas((List<Troca>) dao.consultar(map));
+				
 				compras.add(compra);
 			}
 
@@ -282,6 +286,12 @@ public class CompraDAO implements IDAO{
 			List<CartoesCompra> cartoes = (List<CartoesCompra>) dao.consultar(map);
 			for (CartoesCompra cartao : cartoes) {
 				dao.excluir(cartao.getId());
+			}
+			
+			dao = new TrocaDAO(connection);
+			List<Troca> trocas = (List<Troca>) dao.consultar(map);
+			for (Troca troca : trocas) {
+				dao.excluir(troca.getId());
 			}
 		} catch (Exception e) {
 			throw e;

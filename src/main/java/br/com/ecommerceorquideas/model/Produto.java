@@ -1,5 +1,7 @@
 package br.com.ecommerceorquideas.model;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +16,9 @@ public class Produto extends EntidadeDominio{
 	private Integer quantidade;
 	private Double subTotal;
 	private Integer idCompra;
+	
+	//Não tem no construtor
+	private Date data;
 	
 	public Produto() {}
 	

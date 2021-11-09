@@ -1,12 +1,14 @@
 package br.com.ecommerceorquideas.test;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.w3c.dom.ls.LSInput;
+
+import br.com.ecommerceorquideas.model.Produto;
 
 public class Teste {
 
@@ -34,38 +36,10 @@ public class Teste {
     }
     
     public static void main(String[] args) throws SQLException {
-    	List<Double> precos = new ArrayList<Double>();
-    	precos.add(10.0);
-    	precos.add(5.0);
-    	precos.add(15.0);
-    	precos.add(35.0);
-    	precos.add(50.0);
-    	precos.add(45.0);
-    	precos.add(25.0);
+    	HashMap<Integer, List<Produto>> map = new HashMap<Integer, List<Produto>>();
     	
-    	int tamanhoLista = precos.size(); 
+    	System.out.println(map.get(1));
     	
-    	Double[] valores = new Double[tamanhoLista];
-		Double menor;
-		
-		for(int i = 0; i < tamanhoLista;  i++) {
-			valores[i] = precos.get(i);
-		}
-		
-    	for(int i = 1; i < tamanhoLista; i++) {
-			for(int j = 0; j < tamanhoLista - i; j++) {
-				if(valores[j] < valores[j+1]) {
-					menor = valores[j];
-					valores[j] = valores[j+1];
-					valores[j+1] = menor;
-				}
-			}			
-		}
-		
-		
-    	for(Double valor : valores) {
-    		System.out.println(valor);
-    	}
     }
 	
 

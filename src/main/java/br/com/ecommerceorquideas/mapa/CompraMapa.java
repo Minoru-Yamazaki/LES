@@ -43,7 +43,7 @@ public class CompraMapa implements IMapa{
 		if(pedido.getCep() != null)
 			map.put("cep", pedido.getCep());
 		if(pedido.getCliId() != null)
-			map.put("id", pedido.getCliId().toString());;
+			map.put("cli_id", pedido.getCliId().toString());;
 		
 		return map;
 	}

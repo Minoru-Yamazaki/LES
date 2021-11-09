@@ -19,8 +19,10 @@ import br.com.ecommerceorquideas.dao.IDAO;
 import br.com.ecommerceorquideas.dao.ImagemDAO;
 import br.com.ecommerceorquideas.dao.LoginAdminDAO;
 import br.com.ecommerceorquideas.dao.LoginDAO;
+import br.com.ecommerceorquideas.dao.MensagemDAO;
 import br.com.ecommerceorquideas.dao.OrquideaDAO;
 import br.com.ecommerceorquideas.dao.ProdutoDAO;
+import br.com.ecommerceorquideas.dao.TrocaDAO;
 import br.com.ecommerceorquideas.mapa.AdministradorMapa;
 import br.com.ecommerceorquideas.mapa.CartaoMapa;
 import br.com.ecommerceorquideas.mapa.ClienteMapa;
@@ -34,9 +36,12 @@ import br.com.ecommerceorquideas.mapa.IMapa;
 import br.com.ecommerceorquideas.mapa.ImagemMapa;
 import br.com.ecommerceorquideas.mapa.LoginAdminMapa;
 import br.com.ecommerceorquideas.mapa.LoginMapa;
+import br.com.ecommerceorquideas.mapa.MensagemMapa;
 import br.com.ecommerceorquideas.mapa.OrquideaMapa;
 import br.com.ecommerceorquideas.mapa.ProdutoMapa;
+import br.com.ecommerceorquideas.mapa.TrocaMapa;
 import br.com.ecommerceorquideas.model.Administrador;
+import br.com.ecommerceorquideas.model.Analise;
 import br.com.ecommerceorquideas.model.Cartao;
 import br.com.ecommerceorquideas.model.Cliente;
 import br.com.ecommerceorquideas.model.Compra;
@@ -49,8 +54,11 @@ import br.com.ecommerceorquideas.model.Genero;
 import br.com.ecommerceorquideas.model.Imagem;
 import br.com.ecommerceorquideas.model.Login;
 import br.com.ecommerceorquideas.model.LoginAdmin;
+import br.com.ecommerceorquideas.model.Mensagem;
 import br.com.ecommerceorquideas.model.Orquidea;
 import br.com.ecommerceorquideas.model.Produto;
+import br.com.ecommerceorquideas.model.Troca;
+import br.com.ecommerceorquideas.model.dashboard.ChartOptions;
 import br.com.ecommerceorquideas.strategy.AdmGeraCodigoAleatorio;
 import br.com.ecommerceorquideas.strategy.AdmVerificaData;
 import br.com.ecommerceorquideas.strategy.CarVerificaCadastro;
@@ -58,13 +66,20 @@ import br.com.ecommerceorquideas.strategy.CliVerficaPreencTelefone;
 import br.com.ecommerceorquideas.strategy.CliVerificaData;
 import br.com.ecommerceorquideas.strategy.CliVerificaPreencSexo;
 import br.com.ecommerceorquideas.strategy.CliVerificaSenha;
-import br.com.ecommerceorquideas.strategy.ComInseriData;
+import br.com.ecommerceorquideas.strategy.ComAdicionaData;
+import br.com.ecommerceorquideas.strategy.ComAlteraRanking;
+import br.com.ecommerceorquideas.strategy.ComGeraNotificacao;
+import br.com.ecommerceorquideas.strategy.ComRetornaProdutosEstoque;
+import br.com.ecommerceorquideas.strategy.ComVerificaProdutos;
 import br.com.ecommerceorquideas.strategy.ComVerificaUsoCartoes;
 import br.com.ecommerceorquideas.strategy.ComVerificaValor;
 import br.com.ecommerceorquideas.strategy.GenVerificaNome;
 import br.com.ecommerceorquideas.strategy.IStrategy;
+import br.com.ecommerceorquideas.strategy.MenAdicionaData;
 import br.com.ecommerceorquideas.strategy.PesVerificaCPF;
 import br.com.ecommerceorquideas.strategy.PesVerificaEmail;
+import br.com.ecommerceorquideas.strategy.TroVerificaProduto;
+import br.com.ecommerceorquideas.util.Grafico;
 import br.com.ecommerceorquideas.warning.Aviso;
 
 public class Facade implements IFacade {
@@ -123,17 +138,28 @@ public class Facade implements IFacade {
 
 	@Override
 	public Object consultar(EntidadeDominio entidade) {
+		String analise = Analise.class.getName();
+		String nomeEntidade = entidade.getClass().getName();
+		
+		if(nomeEntidade == analise) {
+			Analise analiseDados = (Analise) entidade;
+			
+			if(analiseDados.getDataFinal().before(analiseDados.getDataInicial())) {
+				return null;
+			}
+			return Grafico.geraDados(analiseDados);
+		}else {
+			IDAO dao = mapDAO.get(nomeEntidade);
+			IMapa mapa = entityToMap.get(nomeEntidade);
+			HashMap<String, String> map = mapa.mapeia(entidade);
 
-		IDAO dao = mapDAO.get(entidade.getClass().getName());
-		IMapa mapa = entityToMap.get(entidade.getClass().getName());
-		HashMap<String, String> map = mapa.mapeia(entidade);
+			List<Object> retorno = (List<Object>) dao.consultar(map);
+			if (retorno.size() == 0) {
+				return Arrays.asList(new Aviso("Nenhum resultado obtido"));
+			}
 
-		List<Object> retorno = (List<Object>) dao.consultar(map);
-		if (retorno.size() == 0) {
-			return Arrays.asList(new Aviso("Nenhum resultado obtido"));
+			return retorno;
 		}
-
-		return retorno;
 	}
 
 	private void defineDAOs() {
@@ -153,6 +179,8 @@ public class Facade implements IFacade {
 		mapDAO.put(CupomAdmin.class.getName(), new CupomAdminDAO());
 		mapDAO.put(LoginAdmin.class.getName(), new LoginAdminDAO());
 		mapDAO.put(Administrador.class.getName(), new AdministradorDAO());
+		mapDAO.put(Troca.class.getName(), new TrocaDAO());
+		mapDAO.put(Mensagem.class.getName(), new MensagemDAO());
 	}
 
 	private void defineMapas() {
@@ -172,6 +200,8 @@ public class Facade implements IFacade {
 		entityToMap.put(CupomAdmin.class.getName(), new CupomAdminMapa());
 		entityToMap.put(LoginAdmin.class.getName(), new LoginAdminMapa());
 		entityToMap.put(Administrador.class.getName(), new AdministradorMapa());
+		entityToMap.put(Troca.class.getName(), new TrocaMapa());
+		entityToMap.put(Mensagem.class.getName(), new MensagemMapa());
 	}
 
 	private void defineValidadores() {
@@ -200,10 +230,15 @@ public class Facade implements IFacade {
 		rnSalvar.put(Cartao.class.getName(), salvarCartao);
 		
 		List<IStrategy> salvarCompra = new ArrayList<IStrategy>();
-		salvarCompra.add(new ComInseriData());
+		salvarCompra.add(new ComVerificaProdutos());
+		salvarCompra.add(new ComAdicionaData());
 		salvarCompra.add(new ComVerificaUsoCartoes());
 		salvarCompra.add(new ComVerificaValor());
 		rnSalvar.put(Compra.class.getName(), salvarCompra);
+		
+		List<IStrategy> salvarTroca = new ArrayList<IStrategy>();
+		salvarTroca.add(new TroVerificaProduto());
+		rnSalvar.put(Troca.class.getName(), salvarTroca);
 		
 		//*****************ADMINISTRADOR**************************
 		List<IStrategy> salvarAdministrador = new ArrayList<IStrategy>();
@@ -220,6 +255,10 @@ public class Facade implements IFacade {
 		salvarCupomAdmin.add(new AdmGeraCodigoAleatorio());
 		salvarCupomAdmin.add(new AdmVerificaData());
 		rnSalvar.put(CupomAdmin.class.getName(), salvarCupomAdmin);
+		
+		List<IStrategy> salvarMensagem = new ArrayList<IStrategy>();
+		salvarMensagem.add(new MenAdicionaData());
+		rnSalvar.put(Mensagem.class.getName(), salvarMensagem);
 		
 		// **************alterar*******************
 
@@ -243,6 +282,16 @@ public class Facade implements IFacade {
 		List<IStrategy> alterarGenero = new ArrayList<IStrategy>();
 		alterarGenero.add(new GenVerificaNome());
 		rnAlterar.put(Genero.class.getName(), alterarGenero);
+		
+		List<IStrategy> alterarMensagem = new ArrayList<IStrategy>();
+		alterarMensagem.add(new MenAdicionaData());
+		rnAlterar.put(Mensagem.class.getName(), alterarMensagem);
+		
+		List<IStrategy> alterarCompra = new ArrayList<IStrategy>();
+		alterarCompra.add(new ComAlteraRanking());
+		alterarCompra.add(new ComGeraNotificacao());
+		alterarCompra.add(new ComRetornaProdutosEstoque());
+		rnAlterar.put(Compra.class.getName(), alterarCompra);
 		
 		// **************consultar*******************
 		

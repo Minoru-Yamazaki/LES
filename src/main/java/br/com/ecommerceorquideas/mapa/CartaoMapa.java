@@ -27,7 +27,4 @@ public class CartaoMapa implements IMapa{
 		
 		return map;
 	}
-
-
-
 }

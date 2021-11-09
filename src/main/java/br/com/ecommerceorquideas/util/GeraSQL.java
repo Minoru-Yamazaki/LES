@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import br.com.ecommerceorquideas.model.Analise;
+
 public class GeraSQL {
 
 	public static String select(HashMap<String, String> map, String tabela) {
@@ -40,6 +42,8 @@ public class GeraSQL {
 		numeros.add("prc_id");
 		numeros.add("quantidade");
 		numeros.add("orq_id");
+		numeros.add("ranking");
+		numeros.add("total_gasto");
 		numeros.add("valor_custo");
 		numeros.add("valor");
 		
@@ -49,5 +53,18 @@ public class GeraSQL {
 		}
 		return false;
 
+	}
+	
+	public static String analiseSelect(Analise analise) {
+		StringBuilder select = new StringBuilder();
+		
+		select.append("SELECT * FROM compras WHERE data>='");
+		select.append(FormataData.yyMMdd(analise.getDataInicial()));
+		select.append("' && data<='");
+		select.append(FormataData.yyMMdd(analise.getDataFinal()));
+		select.append("' && status NOT LIKE '%Cancelamento%'");
+		
+		
+		return select.toString();
 	}
 }

@@ -26,6 +26,10 @@ public class ClienteMapa implements IMapa{
 			map.put("telefone", cliente.getTelefone());
 		if(cliente.getTipoTelefone() != null)
 			map.put("tipo_telefone", cliente.getTipoTelefone());
+		if(cliente.getTotalGasto() != null)
+			map.put("total_gasto", cliente.getTotalGasto().toString());
+		if(cliente.getRanking() != null)
+			map.put("ranking", cliente.getRanking().toString());
 		
 		return map;
 	}

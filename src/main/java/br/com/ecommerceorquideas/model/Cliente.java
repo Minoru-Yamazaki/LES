@@ -18,6 +18,9 @@ public class Cliente extends EntidadeDominio{
 	private Date nascimento;
 	private String tipoTelefone;
 	private String telefone;
+	private Double totalGasto;
+	private Integer ranking;
+	
 	private List<Cartao> cartoes;
 	private List<Endereco> enderecos;
 	private List<Cupom> cupons;
@@ -26,7 +29,7 @@ public class Cliente extends EntidadeDominio{
 	
 	
 	public Cliente(Integer id, String cpf, String nome, String sexo, Date nascimento,
-			String telefone, String tipoTelefone) {
+			String telefone, String tipoTelefone, Double totalGasto, Integer ranking) {
 		super(id);
 		this.cpf = cpf;
 		this.nome = nome;
@@ -34,5 +37,7 @@ public class Cliente extends EntidadeDominio{
 		this.nascimento = nascimento;
 		this.tipoTelefone = tipoTelefone;
 		this.telefone = telefone;
+		this.totalGasto = totalGasto;
+		this.ranking = ranking;
 	}
 }

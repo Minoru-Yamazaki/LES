@@ -9,65 +9,57 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import br.com.ecommerceorquideas.model.CartoesCompra;
 import br.com.ecommerceorquideas.model.EntidadeDominio;
+import br.com.ecommerceorquideas.model.Troca;
 import br.com.ecommerceorquideas.util.Conexao;
 import br.com.ecommerceorquideas.util.GeraSQL;
 import br.com.ecommerceorquideas.warning.Aviso;
 
-public class CartoesCompraDAO implements IDAO{
+public class TrocaDAO implements IDAO{
 
-	private static final String INSERT = "INSERT INTO cartoes_compra(numero, bandeira, total, car_id, com_id) VALUES(?,?,?,?,?)";
-	private static final String UPDATE = "UPDATE cartoes_compra SET numero=?, bandeira=?, total=? WHERE id=?";
-	private static final String DELETE = "DELETE FROM cartoes_compra WHERE id=?";
-	
+	private static final String INSERT = "INSERT INTO trocas(pro_id, quantidade, qtde_max, preco, com_id) VALUES(?,?,?,?,?)";
+	private static final String UPDATE = "UPDATE trocas SET pro_id=?, quantidade=?, qtde_max=?, preco=? WHERE id=?";
+	private static final String DELETE = "DELETE FROM trocas WHERE id=?";
+
 	private Connection connection;
 	private PreparedStatement preparedStatement = null;
 
 	private Aviso aviso;
 
-	public CartoesCompraDAO() {
+	public TrocaDAO() {
 	}
 
-	public CartoesCompraDAO(Connection connection) {
+	public TrocaDAO(Connection connection) {
 		this.connection = connection;
 	}
 	
 	@Override
 	public Object salvar(EntidadeDominio entidade) throws SQLException {
-		CartoesCompra cartoesCompra = (CartoesCompra) entidade;
+		Troca troca = (Troca) entidade;
 		aviso = new Aviso();
-		boolean commit = false;
 		
 		try {
-			if (connection == null || connection.isClosed()) {
-				connection = Conexao.getConnection();
-				connection.setAutoCommit(false);
-				commit = true;
-			}
+			connection = Conexao.getConnection();
+			connection.setAutoCommit(false);
 
 			preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
 
-			preparedStatement.setString(1, cartoesCompra.getNumero());
-			preparedStatement.setString(2, cartoesCompra.getBandeira());
-			preparedStatement.setDouble(3, cartoesCompra.getTotal());
-			preparedStatement.setInt(4, cartoesCompra.getIdCartao());
-			preparedStatement.setInt(5, cartoesCompra.getIdCompra());
-						
+			preparedStatement.setInt(1, troca.getProId());
+			preparedStatement.setInt(2, troca.getQuantidade());
+			preparedStatement.setInt(3, troca.getQtdeMax());
+			preparedStatement.setDouble(4, troca.getPreco());
+			preparedStatement.setInt(5, troca.getComId());
+			
 			preparedStatement.executeUpdate();
 
 			ResultSet rs = preparedStatement.getGeneratedKeys();
-
 			if (rs.next()) {
-				cartoesCompra.setId(rs.getInt(1));
+				troca.setId(rs.getInt(1));
 			}
 
 			preparedStatement.close();
-			
-			if (commit) {
-				connection.commit();
-			}			
-			aviso.addMensagem("cartão salvo com sucesso");
+			connection.commit();
+			aviso.addMensagem("Salvo com sucesso");
 
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao salvar as informações");
@@ -79,9 +71,7 @@ public class CartoesCompraDAO implements IDAO{
 			e.printStackTrace();
 		} finally {
 			try {
-				if (commit) {
-					connection.close();
-				}
+				connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -91,26 +81,26 @@ public class CartoesCompraDAO implements IDAO{
 
 	@Override
 	public Object alterar(EntidadeDominio entidade) {
-		CartoesCompra cartoesCompra = (CartoesCompra) entidade;
+		Troca troca = (Troca) entidade;
 		aviso = new Aviso();
-
+		
 		try {
 			connection = Conexao.getConnection();
 			connection.setAutoCommit(false);
 
 			preparedStatement = connection.prepareStatement(UPDATE);
 
-			preparedStatement.setString(1, cartoesCompra.getNumero());
-			preparedStatement.setString(2, cartoesCompra.getBandeira());
-			preparedStatement.setDouble(3, cartoesCompra.getTotal());
-			preparedStatement.setInt(4, cartoesCompra.getId());
-			
+			preparedStatement.setInt(1, troca.getProId());
+			preparedStatement.setInt(2, troca.getQuantidade());
+			preparedStatement.setInt(3, troca.getQtdeMax());
+			preparedStatement.setDouble(4, troca.getPreco());
+			preparedStatement.setInt(5, troca.getId());
+
 			preparedStatement.executeUpdate();
 
 			preparedStatement.close();
 			connection.commit();
-
-			aviso.addMensagem("Cartão alterado com sucesso");
+			aviso.addMensagem("Alterado com sucesso");
 
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao alterar as informações");
@@ -134,13 +124,14 @@ public class CartoesCompraDAO implements IDAO{
 	public Object excluir(Integer id) {
 		boolean commit = false;
 		aviso = new Aviso();
-
+		
 		try {
 			if (connection == null || connection.isClosed()) {
 				connection = Conexao.getConnection();
 				connection.setAutoCommit(false);
 				commit = true;
 			}
+
 			preparedStatement = connection.prepareStatement(DELETE);
 
 			preparedStatement.setInt(1, id);
@@ -150,7 +141,7 @@ public class CartoesCompraDAO implements IDAO{
 			if (commit) {
 				connection.commit();
 			}
-			aviso.addMensagem("Cartão excluido com sucesso");
+			aviso.addMensagem("Excluido com sucesso");
 
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao excluir as informações");
@@ -174,7 +165,7 @@ public class CartoesCompraDAO implements IDAO{
 
 	@Override
 	public Object consultar(HashMap<String, String> map) {
-		List<EntidadeDominio> cartoes = new ArrayList<>();
+		List<Object> trocas = new ArrayList<>();
 		boolean transacao = false;
 		
 		try {
@@ -182,24 +173,25 @@ public class CartoesCompraDAO implements IDAO{
 				connection = Conexao.getConnection();
 				transacao = true;
 			}
-			String find = GeraSQL.select(map, "cartoes_compra");
 
+			String find = GeraSQL.select(map, "trocas");
 			preparedStatement = connection.prepareStatement(find);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				cartoes.add(new CartoesCompra(rs.getInt(1), rs.getString(2), rs.getString(3),
-						rs.getDouble(4), rs.getInt(5), rs.getInt(6)));
+				trocas.add(new Troca(rs.getInt(1), rs.getInt(2),
+						rs.getInt(3), rs.getInt(4), rs.getDouble(5), rs.getInt(6), false));
 			}
 
 			if(transacao) {
 				preparedStatement.close();
 			}
+
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return cartoes;
+		return trocas;
 	}
 
 }

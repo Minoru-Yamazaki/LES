@@ -24,7 +24,7 @@ import br.com.ecommerceorquideas.warning.Aviso;
 public class ClienteDAO implements IDAO {
 
 	private static final String INSERT = "INSERT INTO clientes(cpf, nome, sexo, data_nascimento, telefone, tipo_telefone) VALUES(?,?,?,?,?,?)";
-	private static final String UPDATE = "UPDATE clientes SET cpf=?, nome=?, sexo=?, data_nascimento=?, telefone=?, tipo_telefone=? WHERE id=?";
+	private static final String UPDATE = "UPDATE clientes SET cpf=?, nome=?, sexo=?, data_nascimento=?, telefone=?, tipo_telefone=?, total_gasto=?, ranking=? WHERE id=?";
 	private static final String DELETE = "DELETE FROM clientes WHERE id=?";
 
 	private Connection connection;
@@ -102,7 +102,9 @@ public class ClienteDAO implements IDAO {
 			preparedStatement.setTimestamp(4, time);
 			preparedStatement.setString(5, cliente.getTelefone());
 			preparedStatement.setString(6, cliente.getTipoTelefone());
-			preparedStatement.setInt(7, cliente.getId());
+			preparedStatement.setDouble(7, cliente.getTotalGasto());
+			preparedStatement.setInt(8, cliente.getRanking());
+			preparedStatement.setInt(9, cliente.getId());
 
 			preparedStatement.executeUpdate();
 
@@ -181,7 +183,8 @@ public class ClienteDAO implements IDAO {
 
 			while (rs.next()) {
 				cliente = new Cliente(rs.getInt(1), rs.getString(2), rs.getString(3),
-						rs.getString(4), rs.getDate(5), rs.getString(6), rs.getString(7));
+						rs.getString(4), rs.getDate(5), rs.getString(6), rs.getString(7),
+						rs.getDouble(8), rs.getInt(9));
 
 				map = new HashMap<>();
 				map.put("cli_id", cliente.getId().toString());

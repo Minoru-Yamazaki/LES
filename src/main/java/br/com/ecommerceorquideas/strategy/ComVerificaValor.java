@@ -29,47 +29,76 @@ public class ComVerificaValor implements IStrategy{
 		Double saldo = verificaValorCompra(compra);
 		Double valorCartoes = calculaTotalCartoes(compra.getCartoes());
 		boolean qtdeCuponsOk = verificaCuponsUsados(compra);
-		List<String> mensagensCartao = verificaValidadeCupons(compra);
+		List<String> mensagensCupom = verificaValidadeCupons(compra);
 		
-		if(saldo == 0.0 && mensagensCartao == null) {
-			excluiCuponsUsados(compra);
-			atualizaEstoque(compra);
+		if(saldo == 0.0 && mensagensCupom == null) {
+			List<String> mensagens = atualizaEstoque(compra);
+			
+			if(mensagens != null) {
+				return mensagens;
+			}
+			// TODO
+			//excluiCuponsUsados(compra);
+			
 			return null; //valor correto
 		
 		}else if(saldo > 0) {
 			return Arrays.asList("Valor informado no cartão está incorreto!");
 		
-		}else if(saldo < 0 && qtdeCuponsOk && valorCartoes == 0 && mensagensCartao == null){
+		}else if(saldo < 0 && qtdeCuponsOk && valorCartoes == 0 && mensagensCupom == null){
+			List<String> mensagens = atualizaEstoque(compra);
+			if(mensagens != null) {
+				return mensagens;
+			}
+			// TODO
 			geraCupomTroca(compra, saldo);
-			atualizaEstoque(compra);
-			excluiCuponsUsados(compra);
+			//excluiCuponsUsados(compra);
 			return null;
 		
-		}else if(qtdeCuponsOk && mensagensCartao == null){
+		}else if(qtdeCuponsOk && mensagensCupom == null){
 			return Arrays.asList("Você inseriu dinheiro a mais");
 
-		}else if(mensagensCartao != null){
-			return mensagensCartao;
+		}else if(mensagensCupom != null){
+			return mensagensCupom;
 		
 		}else {
 			return Arrays.asList("Você inseriu cupons a mais");
 		}		
 	}
 	
-	private void atualizaEstoque(Compra compra) {
+	private List<String> atualizaEstoque(Compra compra) {
 		List<Produto> produtos = compra.getProdutos();
+		List<String> mensagens = new ArrayList<String>();
 		OrquideaDAO dao = new OrquideaDAO();
 		Orquidea orquidea;
 		
+		//Verifica se algum produto não tem a quantidade suficiente
+		for(Produto produto : produtos) {
+			orquidea = consultarOrquidea(produto, dao);
+			
+			if(orquidea.getQuantidade() < produto.getQuantidade()) {
+				mensagens.add("Quantidade insuficiente no estoque do produto: " + orquidea.getNome());
+			}			
+		}
+		
+		if(mensagens.size() > 0) {
+			return mensagens;
+		}
+		//Atualiza estoque
 		for(Produto produto : produtos) {
 			orquidea = consultarOrquidea(produto, dao);
 			
 			orquidea.setQuantidade(orquidea.getQuantidade() - produto.getQuantidade());
+			
+			if(orquidea.getQuantidade() == 0) {
+				orquidea.setAtivo(0);//Desativa produto
+			}
 			dao.alterar(orquidea);
 		}
+		return null;
 	}
 	
-	private Orquidea consultarOrquidea(Produto produto, IDAO dao) {
+	private Orquidea consultarOrquidea(Produto produto, OrquideaDAO dao) {
 		HashMap<String, String> map = new HashMap<>();
 				
 		map.put("id", produto.getIdProduto().toString());

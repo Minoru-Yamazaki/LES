@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.com.ecommerceorquideas.command.AlterarCommand;
 import br.com.ecommerceorquideas.command.ConsultarCommand;
 import br.com.ecommerceorquideas.command.ExcluirCommand;
@@ -19,6 +21,7 @@ import br.com.ecommerceorquideas.command.ICommand;
 import br.com.ecommerceorquideas.command.SalvarCommand;
 import br.com.ecommerceorquideas.model.EntidadeDominio;
 import br.com.ecommerceorquideas.viewhelper.AdministradorVH;
+import br.com.ecommerceorquideas.viewhelper.AnaliseVH;
 import br.com.ecommerceorquideas.viewhelper.CartaoVH;
 import br.com.ecommerceorquideas.viewhelper.ClienteVH;
 import br.com.ecommerceorquideas.viewhelper.CompraVH;
@@ -31,8 +34,10 @@ import br.com.ecommerceorquideas.viewhelper.IViewHelper;
 import br.com.ecommerceorquideas.viewhelper.ImagemVH;
 import br.com.ecommerceorquideas.viewhelper.LoginAdminVH;
 import br.com.ecommerceorquideas.viewhelper.LoginVH;
+import br.com.ecommerceorquideas.viewhelper.MensagemVH;
 import br.com.ecommerceorquideas.viewhelper.OrquideaVH;
 import br.com.ecommerceorquideas.viewhelper.ProdutoVH;
+import br.com.ecommerceorquideas.viewhelper.TrocaVH;
 
 
 @CrossOrigin("*")
@@ -42,8 +47,10 @@ public class Controller {
 	
 	private static Map<String, ICommand> commands;
 	private static Map<String, IViewHelper> vhs;
+	private ObjectMapper jsonDataMapper;
 
-	public Controller() {
+	public Controller(ObjectMapper jsonDataMapper) {
+		this.jsonDataMapper = jsonDataMapper;
 		carregarCommand();
 		carregarVH();
 	}
@@ -87,5 +94,8 @@ public class Controller {
 		vhs.put("admcupom", new CupomAdminVH());
 		vhs.put("admlogin", new LoginAdminVH());
 		vhs.put("administrador", new AdministradorVH());
+		vhs.put("troca", new TrocaVH());
+		vhs.put("mensagem", new MensagemVH());
+		vhs.put("analise", new AnaliseVH(jsonDataMapper));
 	}
 }
