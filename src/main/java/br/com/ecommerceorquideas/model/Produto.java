@@ -15,8 +15,7 @@ public class Produto extends EntidadeDominio{
 	private String descricao;
 	private Integer quantidade;
 	private Double subTotal;
-	private Integer idCompra;
-	
+	private Integer idCompra;	
 	//Não tem no construtor
 	private Date data;
 	

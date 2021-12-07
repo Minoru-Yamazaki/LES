@@ -48,8 +48,8 @@ public class OrquideaMapa implements IMapa{
 			map.put("fornecedor", orquidea.getFornecedor());
 		if(orquidea.getDataHora() != null)
 			map.put("data_hora", orquidea.getDataHora().toString());
-		if(orquidea.getUsuario() != null)
-			map.put("usuario", orquidea.getUsuario());
+		if(orquidea.getIdAdm() != null)
+			map.put("adm_id", orquidea.getIdAdm().toString());
 		if(orquidea.getIdPrecificacao() != null)
 			map.put("prc_id", orquidea.getIdPrecificacao().toString());
 		

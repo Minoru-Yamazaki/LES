@@ -12,17 +12,17 @@ import br.com.ecommerceorquideas.model.Cupom;
 
 public class CupomTroca {
 
-	public static void geraCupom(Compra compra, Double valor, String descricao, Date validade) {
-		SimpleDateFormat formatoPadrao = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+	public static void geraCupom(Compra compra, Double valor, String descricao) {
+		SimpleDateFormat formatoPadrao = new SimpleDateFormat("dd/MM/yyyy"); //dd/MM/yyyy - HH:mm:ss
 		SimpleDateFormat formatoNome = new SimpleDateFormat("ddMMyyyyHHmmss");
 		String dataHora = formatoPadrao.format(compra.getData()).toString();
 		
 		//"Cupom de troca de produto da compra do dia : ";
 		descricao += dataHora;
 		
-		String nome = "Cupom de troca " + formatoNome.format(compra.getData()).toString();
-		System.out.println(nome);
-		Date dataValidade = geraDataValidade(validade);
+		String nome = "Cupom de troca " + GeraCodigo.gerar(); //formatoNome.format(compra.getData()).toString();
+		
+		Date dataValidade = geraDataValidade(new Date());
 		
 		Cupom cupom = new Cupom(
 				nome, descricao.toString(), "troca",

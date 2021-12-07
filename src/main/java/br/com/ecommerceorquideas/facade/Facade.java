@@ -21,6 +21,7 @@ import br.com.ecommerceorquideas.dao.LoginAdminDAO;
 import br.com.ecommerceorquideas.dao.LoginDAO;
 import br.com.ecommerceorquideas.dao.MensagemDAO;
 import br.com.ecommerceorquideas.dao.OrquideaDAO;
+import br.com.ecommerceorquideas.dao.PrecificacaoDAO;
 import br.com.ecommerceorquideas.dao.ProdutoDAO;
 import br.com.ecommerceorquideas.dao.TrocaDAO;
 import br.com.ecommerceorquideas.mapa.AdministradorMapa;
@@ -38,6 +39,7 @@ import br.com.ecommerceorquideas.mapa.LoginAdminMapa;
 import br.com.ecommerceorquideas.mapa.LoginMapa;
 import br.com.ecommerceorquideas.mapa.MensagemMapa;
 import br.com.ecommerceorquideas.mapa.OrquideaMapa;
+import br.com.ecommerceorquideas.mapa.PrecificacaoMapa;
 import br.com.ecommerceorquideas.mapa.ProdutoMapa;
 import br.com.ecommerceorquideas.mapa.TrocaMapa;
 import br.com.ecommerceorquideas.model.Administrador;
@@ -56,9 +58,9 @@ import br.com.ecommerceorquideas.model.Login;
 import br.com.ecommerceorquideas.model.LoginAdmin;
 import br.com.ecommerceorquideas.model.Mensagem;
 import br.com.ecommerceorquideas.model.Orquidea;
+import br.com.ecommerceorquideas.model.Precificacao;
 import br.com.ecommerceorquideas.model.Produto;
 import br.com.ecommerceorquideas.model.Troca;
-import br.com.ecommerceorquideas.model.dashboard.ChartOptions;
 import br.com.ecommerceorquideas.strategy.AdmGeraCodigoAleatorio;
 import br.com.ecommerceorquideas.strategy.AdmVerificaData;
 import br.com.ecommerceorquideas.strategy.CarVerificaCadastro;
@@ -76,6 +78,14 @@ import br.com.ecommerceorquideas.strategy.ComVerificaValor;
 import br.com.ecommerceorquideas.strategy.GenVerificaNome;
 import br.com.ecommerceorquideas.strategy.IStrategy;
 import br.com.ecommerceorquideas.strategy.MenAdicionaData;
+import br.com.ecommerceorquideas.strategy.OrqAdicionaData;
+import br.com.ecommerceorquideas.strategy.OrqAdicionaDataAlteracao;
+import br.com.ecommerceorquideas.strategy.OrqGeraPrecoVenda;
+import br.com.ecommerceorquideas.strategy.OrqVerificaCadastro;
+import br.com.ecommerceorquideas.strategy.OrqVerificaCamposNulos;
+import br.com.ecommerceorquideas.strategy.OrqVerificaPrecoVenda;
+import br.com.ecommerceorquideas.strategy.OrqVerificaQtde;
+import br.com.ecommerceorquideas.strategy.OrqVerificaStatus;
 import br.com.ecommerceorquideas.strategy.PesVerificaCPF;
 import br.com.ecommerceorquideas.strategy.PesVerificaEmail;
 import br.com.ecommerceorquideas.strategy.TroVerificaProduto;
@@ -181,6 +191,7 @@ public class Facade implements IFacade {
 		mapDAO.put(Administrador.class.getName(), new AdministradorDAO());
 		mapDAO.put(Troca.class.getName(), new TrocaDAO());
 		mapDAO.put(Mensagem.class.getName(), new MensagemDAO());
+		mapDAO.put(Precificacao.class.getName(), new PrecificacaoDAO());
 	}
 
 	private void defineMapas() {
@@ -202,6 +213,7 @@ public class Facade implements IFacade {
 		entityToMap.put(Administrador.class.getName(), new AdministradorMapa());
 		entityToMap.put(Troca.class.getName(), new TrocaMapa());
 		entityToMap.put(Mensagem.class.getName(), new MensagemMapa());
+		entityToMap.put(Precificacao.class.getName(), new PrecificacaoMapa());
 	}
 
 	private void defineValidadores() {
@@ -260,6 +272,14 @@ public class Facade implements IFacade {
 		salvarMensagem.add(new MenAdicionaData());
 		rnSalvar.put(Mensagem.class.getName(), salvarMensagem);
 		
+		List<IStrategy> salvarOrquidea = new ArrayList<IStrategy>();
+		salvarOrquidea.add(new OrqAdicionaData());
+		salvarOrquidea.add(new OrqGeraPrecoVenda());
+		salvarOrquidea.add(new OrqVerificaCamposNulos());
+		salvarOrquidea.add(new OrqVerificaQtde());
+		salvarOrquidea.add(new OrqVerificaCadastro());
+		rnSalvar.put(Orquidea.class.getName(), salvarOrquidea);
+		
 		// **************alterar*******************
 
 		rnAlterar = new HashMap<String, List<IStrategy>>();
@@ -292,6 +312,13 @@ public class Facade implements IFacade {
 		alterarCompra.add(new ComGeraNotificacao());
 		alterarCompra.add(new ComRetornaProdutosEstoque());
 		rnAlterar.put(Compra.class.getName(), alterarCompra);
+		
+		List<IStrategy> alterarOrquidea = new ArrayList<IStrategy>();
+		alterarOrquidea.add(new OrqVerificaStatus());
+		alterarOrquidea.add(new OrqVerificaQtde());
+		alterarOrquidea.add(new OrqVerificaPrecoVenda());
+		alterarOrquidea.add(new OrqAdicionaDataAlteracao());
+		rnAlterar.put(Orquidea.class.getName(), alterarOrquidea);
 		
 		// **************consultar*******************
 		

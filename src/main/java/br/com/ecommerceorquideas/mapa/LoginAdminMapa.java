@@ -14,16 +14,16 @@ public class LoginAdminMapa implements IMapa{
 		HashMap<String, String> map = new HashMap<>();
 		LoginAdmin login = (LoginAdmin) entidade;
 		
-		if(login.getId() != null)
+		if(login.getId() != null) {
 			map.put("adm_id", login.getId().toString());
-		if(login.getEmail() != null)
+		}
+		if(login.getEmail() != null) {
 			map.put("email", login.getEmail());
+		}
 		if(login.getSenha() != null) {
 			String senhaCodificada = new Base64().encodeToString(login.getSenha().getBytes());
-			System.out.println(senhaCodificada);
 			map.put("senha", senhaCodificada);
-		}
-			
+		}	
 				
 		return map;
 	}

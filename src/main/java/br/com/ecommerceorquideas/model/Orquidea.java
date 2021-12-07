@@ -3,6 +3,7 @@ package br.com.ecommerceorquideas.model;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Orquidea extends EntidadeDominio{
 
 	private Integer ativo;
@@ -33,7 +35,7 @@ public class Orquidea extends EntidadeDominio{
 	private String umidadeAmbiente;
 	private String fornecedor;
 	private Date dataHora;
-	private String usuario;
+	private Integer idAdm;
 	private Integer idPrecificacao;
 	private List<Imagem> imagens;
 	
@@ -42,7 +44,7 @@ public class Orquidea extends EntidadeDominio{
 			String cor, Double valorCusto, Double valorVenda, String codigoBarras, String descricao,
 			String nome, String genero, String tipo, String tamanho, String clima,
 			String sombreamento, String tempoFloracao, String umidadeAmbiente, String fornecedor,
-			Date dataHora, String usuario, Integer idPrecificacao){
+			Date dataHora, Integer idAdm, Integer idPrecificacao){
 		super(id);
 		this.ativo = ativo;
 		this.categoriaAtivacao = categoriaAtivacao;
@@ -65,7 +67,7 @@ public class Orquidea extends EntidadeDominio{
 		this.umidadeAmbiente = umidadeAmbiente;
 		this.fornecedor = fornecedor;
 		this.dataHora = dataHora;
-		this.usuario = usuario;
+		this.idAdm = idAdm;
 		this.idPrecificacao = idPrecificacao;
 	}
 }

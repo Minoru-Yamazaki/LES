@@ -9,15 +9,18 @@ import br.com.ecommerceorquideas.model.EntidadeDominio;
 
 public class CompraVH implements IViewHelper{
 
+	private ObjectMapper jsonDataMapper; 
 	private Compra compra = new Compra();
+
+	public CompraVH(ObjectMapper jsonDataMapper) {
+		this.jsonDataMapper = jsonDataMapper;
+	}
 	
 	@Override
 	public EntidadeDominio jsonToEntidade(String json) {
-
-		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
-			compra = mapper.readValue(json, Compra.class);
+			compra = jsonDataMapper.readValue(json, Compra.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

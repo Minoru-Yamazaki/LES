@@ -23,7 +23,7 @@ import br.com.ecommerceorquideas.warning.Aviso;
 public class CompraDAO implements IDAO{
 
 	private static final String INSERT = "INSERT INTO compras(status, data, valor, frete, cidade, estado, pais, bairro, tipo_logradouro, logradouro, numero, complemento, tipo_residencia, cep, cli_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	private static final String UPDATE = "UPDATE compras SET status=?, data=?, valor=?, frete=?, cidade=?, estado=?, pais=?, bairro=?, tipo_logradouro=?, logradouro=?, numero=?, complemento=?, tipo_residencia=?, cep=? WHERE id=?";
+	private static final String UPDATE = "UPDATE compras SET status=?, valor=?, frete=?, cidade=?, estado=?, pais=?, bairro=?, tipo_logradouro=?, logradouro=?, numero=?, complemento=?, tipo_residencia=?, cep=? WHERE id=?";
 	private static final String DELETE = "DELETE FROM compras WHERE id=?";
 	
 	private Connection connection;
@@ -131,21 +131,21 @@ public class CompraDAO implements IDAO{
 			preparedStatement = connection.prepareStatement(UPDATE);
 
 			preparedStatement.setString(1, pedido.getStatus());
-			Timestamp time = new Timestamp(pedido.getData().getTime());
-			preparedStatement.setTimestamp(2, time);
-			preparedStatement.setDouble(3, pedido.getValor());
-			preparedStatement.setDouble(4, pedido.getFrete());
-			preparedStatement.setString(5, pedido.getCidade());
-			preparedStatement.setString(6, pedido.getEstado());
-			preparedStatement.setString(7, pedido.getPais());
-			preparedStatement.setString(8, pedido.getBairro());
-			preparedStatement.setString(9, pedido.getTipoLogradouro());
-			preparedStatement.setString(10, pedido.getLogradouro());
-			preparedStatement.setString(11, pedido.getNumero());
-			preparedStatement.setString(12, pedido.getComplemento());
-			preparedStatement.setString(13, pedido.getTipoResidencia());
-			preparedStatement.setString(14, pedido.getCep());
-			preparedStatement.setInt(15, pedido.getId());
+			//Timestamp time = new Timestamp(pedido.getData().getTime());
+			//preparedStatement.setTimestamp(2, time);
+			preparedStatement.setDouble(2, pedido.getValor());
+			preparedStatement.setDouble(3, pedido.getFrete());
+			preparedStatement.setString(4, pedido.getCidade());
+			preparedStatement.setString(5, pedido.getEstado());
+			preparedStatement.setString(6, pedido.getPais());
+			preparedStatement.setString(7, pedido.getBairro());
+			preparedStatement.setString(8, pedido.getTipoLogradouro());
+			preparedStatement.setString(9, pedido.getLogradouro());
+			preparedStatement.setString(10, pedido.getNumero());
+			preparedStatement.setString(11, pedido.getComplemento());
+			preparedStatement.setString(12, pedido.getTipoResidencia());
+			preparedStatement.setString(13, pedido.getCep());
+			preparedStatement.setInt(14, pedido.getId());
 			
 			preparedStatement.executeUpdate();
 

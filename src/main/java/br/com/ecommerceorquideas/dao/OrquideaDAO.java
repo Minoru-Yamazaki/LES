@@ -19,8 +19,8 @@ import br.com.ecommerceorquideas.warning.Aviso;
 
 public class OrquideaDAO implements IDAO{
 
-	private static final String INSERT = "INSERT INTO orquideas(ativo, categoria_ativacao, justificativa_ativacao, categoria_inativacao, justificativa_inativacao, quantidade, cor, valor_custo, valor_venda, codigo_barras, descricao, nome, genero, tipo, tamanho, clima, sombreamento, tempo_floracao, umidade_ambiente, fornecedor, data_hora, usuario, prc_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	private static final String UPDATE = "UPDATE orquideas SET ativo=?, categoria_ativacao=?, justificativa_ativacao=?, categoria_inativacao=?, justificativa_inativacao=?, quantidade=?, cor=?, valor_custo=?, valor_venda=?, codigo_barras=?, descricao=?, nome=?, genero=?, tipo=?, tamanho=?, clima=?, sombreamento=?, tempo_floracao=?, umidade_ambiente=?, fornecedor=?, data_hora=?, usuario=?, prc_id=? WHERE id=?";
+	private static final String INSERT = "INSERT INTO orquideas(ativo, categoria_ativacao, justificativa_ativacao, categoria_inativacao, justificativa_inativacao, quantidade, cor, valor_custo, valor_venda, codigo_barras, descricao, nome, genero, tipo, tamanho, clima, sombreamento, tempo_floracao, umidade_ambiente, fornecedor, data_hora, adm_id, prc_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String UPDATE = "UPDATE orquideas SET ativo=?, categoria_ativacao=?, justificativa_ativacao=?, categoria_inativacao=?, justificativa_inativacao=?, quantidade=?, cor=?, valor_custo=?, valor_venda=?, codigo_barras=?, descricao=?, nome=?, genero=?, tipo=?, tamanho=?, clima=?, sombreamento=?, tempo_floracao=?, umidade_ambiente=?, fornecedor=?, data_hora=?, adm_id=?, prc_id=? WHERE id=?";
 	private static final String DELETE = "DELETE FROM orquideas WHERE id=?";
 	
 	private Connection connection;
@@ -68,7 +68,7 @@ public class OrquideaDAO implements IDAO{
 			preparedStatement.setString(20, orquidea.getFornecedor());
 			Timestamp time = new Timestamp(orquidea.getDataHora().getTime());
 			preparedStatement.setTimestamp(21, time);
-			preparedStatement.setString(22, orquidea.getUsuario());
+			preparedStatement.setInt(22, orquidea.getIdAdm());
 			preparedStatement.setInt(23, orquidea.getIdPrecificacao());
 
 			preparedStatement.executeUpdate();
@@ -77,6 +77,12 @@ public class OrquideaDAO implements IDAO{
 			if (rs.next()) {
 				orquidea.setId(rs.getInt(1));
 			}
+			
+			ImagemDAO dao = new ImagemDAO(connection);
+			for (Imagem imagem : orquidea.getImagens()) {
+				imagem.setIdOrquidea(orquidea.getId());
+				dao.salvar(imagem);
+			}			
 
 			preparedStatement.close();
 			connection.commit();
@@ -133,7 +139,7 @@ public class OrquideaDAO implements IDAO{
 			preparedStatement.setString(20, orquidea.getFornecedor());
 			Timestamp time = new Timestamp(orquidea.getDataHora().getTime());
 			preparedStatement.setTimestamp(21, time);
-			preparedStatement.setString(22, orquidea.getUsuario());
+			preparedStatement.setInt(22, orquidea.getIdAdm());
 			preparedStatement.setInt(23, orquidea.getIdPrecificacao());
 			
 			preparedStatement.setInt(24, orquidea.getId());
@@ -171,7 +177,7 @@ public class OrquideaDAO implements IDAO{
 			connection.setAutoCommit(false);
 
 			exluirDados(connection, id);//************************************************
-
+			
 			preparedStatement = connection.prepareStatement(DELETE);
 
 			preparedStatement.setInt(1, id);
@@ -218,7 +224,7 @@ public class OrquideaDAO implements IDAO{
 						rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getDouble(9),
 						rs.getDouble(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14),
 						rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(18), rs.getString(19),
-						rs.getString(20), rs.getString(21), rs.getDate(22), rs.getString(23), rs.getInt(24));
+						rs.getString(20), rs.getString(21), rs.getDate(22), rs.getInt(23), rs.getInt(24));
 
 				map = new HashMap<>();
 				map.put("orq_id", orquidea.getId().toString());
@@ -237,29 +243,23 @@ public class OrquideaDAO implements IDAO{
 	}
 	
 	private void exluirDados(Connection connection, Integer id) throws SQLException {
-		/*
+		
 		try {
 			
-			IDAO dao = new LoginDAO(connection);
+			IDAO dao = new ImagemDAO(connection);
 			dao.excluir(id);
 
 			HashMap<String, String> map = new HashMap<>();
-			map.put("cli_id", id.toString());
-			dao = new EnderecoDAO(connection);
-			List<Endereco> enderecos = (List<Endereco>) dao.consultar(map);
-			for (EntidadeDominio endereco : enderecos) {
-				dao.excluir(endereco.getId());
-			}
-
-			dao = new CartaoDAO(connection);
-			List<Cartao> cartoes = (List<Cartao>) dao.consultar(map);
-			for (EntidadeDominio cartao : cartoes) {
-				dao.excluir(cartao.getId());
+			map.put("orq_id", id.toString());
+			
+			List<Imagem> imagens = (List<Imagem>) dao.consultar(map);
+			for (Imagem imagem : imagens) {
+				dao.excluir(imagem.getId());
 			}
 		} catch (Exception e) {
 			throw e;
 		}
-		*/
+		
 		
 	}
 

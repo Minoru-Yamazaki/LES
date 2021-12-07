@@ -37,8 +37,7 @@ public class ComVerificaValor implements IStrategy{
 			if(mensagens != null) {
 				return mensagens;
 			}
-			// TODO
-			//excluiCuponsUsados(compra);
+			excluiCuponsUsados(compra);
 			
 			return null; //valor correto
 		
@@ -50,9 +49,9 @@ public class ComVerificaValor implements IStrategy{
 			if(mensagens != null) {
 				return mensagens;
 			}
-			// TODO
+			
 			geraCupomTroca(compra, saldo);
-			//excluiCuponsUsados(compra);
+			excluiCuponsUsados(compra);
 			return null;
 		
 		}else if(qtdeCuponsOk && mensagensCupom == null){
@@ -92,6 +91,8 @@ public class ComVerificaValor implements IStrategy{
 			
 			if(orquidea.getQuantidade() == 0) {
 				orquidea.setAtivo(0);//Desativa produto
+				orquidea.setCategoriaInativacao("Fora do mercado");
+				orquidea.setCategoriaAtivacao("");
 			}
 			dao.alterar(orquidea);
 		}

@@ -40,7 +40,7 @@ public class ComGeraNotificacao implements IStrategy{
 				String descricao = "Cupom de troca de produto(s) da compra do dia : ";
 				double valor = calcularValor(compra.getTrocas());
 				
-				CupomTroca.geraCupom(compra, valor, descricao, new Date());
+				CupomTroca.geraCupom(compra, valor, descricao);
 				msg = "Cupom gerado ------ Data da compra: " + FormataData.ddMMyy(compra.getData());
 			}
 			mensagem.setMensagem(msg);
