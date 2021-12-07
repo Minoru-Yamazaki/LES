@@ -36,6 +36,7 @@ import br.com.ecommerceorquideas.viewhelper.LoginAdminVH;
 import br.com.ecommerceorquideas.viewhelper.LoginVH;
 import br.com.ecommerceorquideas.viewhelper.MensagemVH;
 import br.com.ecommerceorquideas.viewhelper.OrquideaVH;
+import br.com.ecommerceorquideas.viewhelper.PrecificacaoVH;
 import br.com.ecommerceorquideas.viewhelper.ProdutoVH;
 import br.com.ecommerceorquideas.viewhelper.TrocaVH;
 
@@ -81,11 +82,11 @@ public class Controller {
 	private void carregarVH() {
 		vhs = new HashMap<String, IViewHelper>();	
 		vhs.put("cartao", new CartaoVH());
-		vhs.put("cliente", new ClienteVH());
+		vhs.put("cliente", new ClienteVH(jsonDataMapper));
 		vhs.put("endereco", new EnderecoVH());
 		vhs.put("login", new LoginVH());
 		vhs.put("cupom", new CupomVH());
-		vhs.put("compra", new CompraVH());
+		vhs.put("compra", new CompraVH(jsonDataMapper));
 		vhs.put("produto", new ProdutoVH());
 		vhs.put("orquidea", new OrquideaVH());
 		vhs.put("imagem", new ImagemVH());
@@ -97,5 +98,6 @@ public class Controller {
 		vhs.put("troca", new TrocaVH());
 		vhs.put("mensagem", new MensagemVH());
 		vhs.put("analise", new AnaliseVH(jsonDataMapper));
+		vhs.put("precificacao", new PrecificacaoVH());
 	}
 }
