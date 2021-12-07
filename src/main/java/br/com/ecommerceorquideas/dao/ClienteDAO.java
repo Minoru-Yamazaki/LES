@@ -147,7 +147,7 @@ public class ClienteDAO implements IDAO {
 
 			preparedStatement.close();
 			connection.commit();
-			aviso.addMensagem("Excluido com sucesso");
+			aviso.addMensagem("Excluído com sucesso");
 
 		} catch (SQLException | ClassNotFoundException e) {
 			aviso.addMensagem("Desculpe, ocorreu um erro ao excluir as informações");
