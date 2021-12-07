@@ -87,7 +87,7 @@ export default {
     },
 
     excluir(id) {
-      const resposta = confirm("Escluir esse endereço?");
+      const resposta = confirm("Excluir esse endereço?");
       if (resposta == true) {
         let json = {
           id: id,

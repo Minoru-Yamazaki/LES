@@ -43,19 +43,17 @@
               <input
                 class="ml-2"
                 type="radio"
-                id="masculino"
                 value="masculino"
                 v-model="cliente.sexo"
               />
-              <label class="ml-2" for="celular">masculino</label>
+              <label class="ml-2">Masculino</label>
               <input
                 class="ml-2"
                 type="radio"
-                id="feminino"
                 value="feminino"
                 v-model="cliente.sexo"
               />
-              <label class="ml-2" for="celular">feminino</label>
+              <label class="ml-2">Feminino</label>
             </div>
             <div class="mb-3">
               <label>Data de Nascimento</label>
@@ -64,7 +62,7 @@
                 type="date"
                 name="dtNascimento"
                 id="dtNascimento"
-                :value="cliente.nascimento"
+                v-model="cliente.nascimento"
                 required
               />
             </div>
@@ -89,7 +87,7 @@
                 value="fixo"
                 v-model="cliente.tipoTelefone"
               />
-              <label class="ml-2" for="celular">Fixo</label>
+              <label class="ml-2" for="fixo">Fixo</label>
               <input
                 class="ml-2"
                 type="radio"
@@ -100,7 +98,7 @@
               <label class="ml-2" for="celular">Celular</label>
             </div>
             <div class="text-center mt-3 mb-5">
-              <button type="submit" class="btn btn-primary btn-block ">
+              <button type="submit" class="btn btn-primary btn-block" id="btnSalvar">
                 Salvar
               </button>
             </div>
@@ -132,6 +130,8 @@ export default {
         nascimento: null,
         telefone: null,
         tipoTelefone: null,
+        totalGasto: null,
+        ranking: null,
       },
     };
   },
@@ -144,6 +144,8 @@ export default {
     this.cliente.nascimento = usuario.nascimento;
     this.cliente.telefone = usuario.telefone;
     this.cliente.tipoTelefone = usuario.tipoTelefone;
+    this.cliente.totalGasto = usuario.totalGasto;
+    this.cliente.ranking = usuario.ranking;
   },
   methods: {
     alterarCliente() {

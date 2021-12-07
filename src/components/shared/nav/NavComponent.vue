@@ -7,7 +7,7 @@
 
       <div class="mt-3 text-white">
         <i class="text-white"> {{ getPrimeiroNome() }} </i>
-        <router-link class="mx-3 text-white" to="/minha-conta">
+        <router-link class="mx-3 text-white" to="/minha-conta" id="lnkMinhaConta">
           <i class="fa fa-user fa-2x"></i>
         </router-link>
         <router-link class="mx-3 text-white" to="/mensagens">

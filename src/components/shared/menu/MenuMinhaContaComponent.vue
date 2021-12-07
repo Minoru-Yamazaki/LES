@@ -42,6 +42,7 @@
         type="button"
         class="btn text-secondary"
         v-on:click="excluirCadastro()"
+        id="btnExcluirCadastro"
       >
         <p class="fa fa-user-times h4"></p>
         <i class="h4">excluir cadastro</i>
@@ -62,7 +63,7 @@ export default {
 
   methods: {
     excluirCadastro() {
-      const resposta = confirm("Escluir cadastro?");
+      const resposta = confirm("Excluir cadastro?");
 
       if (resposta == true) {
         let cliente = JSON.parse(localStorage.getItem("cliente"));
@@ -86,7 +87,7 @@ export default {
             alert(data.mensagens);
           })
           .then(() => {
-            this.$router.push({ path: "/#/" });
+            this.$router.push({ path: "/" });
             this.exluirCookies();
           });
       }

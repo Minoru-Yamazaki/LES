@@ -129,7 +129,6 @@ export default {
       orchid: {
         nome: null,
         genero: null,
-        valorVenda: null,
         tipo: null,
         tamanho: null,
         cor: null,

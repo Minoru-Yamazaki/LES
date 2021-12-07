@@ -21,7 +21,7 @@
                 placeholder="minoru@gmail.com"
                 name="txtEmail"
                 id="txtEmail"
-                @input="cliente.login.email = $event.target.value"
+                v-model="cliente.login.email"
                 required
               />
             </div>
@@ -32,7 +32,7 @@
                 type="password"
                 name="pwdSenha"
                 id="pwdSenha"
-                @input="cliente.login.senha = $event.target.value"
+                v-model="cliente.login.senha"
                 required
               />
             </div>
@@ -43,7 +43,7 @@
                 type="password"
                 name="pwdConfSenha"
                 id="pwdConfSenha"
-                @input="cliente.login.senhaConfirm = $event.target.value"
+                v-model="cliente.login.senhaConfirm"
                 required
               />
             </div>
@@ -55,7 +55,7 @@
                 placeholder="12345678910"
                 name="txtCpf"
                 id="txtCpf"
-                @input="cliente.cpf = $event.target.value"
+                v-model="cliente.cpf"
                 minlength="11"
                 maxlength="11"
                 pattern="^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}"
@@ -69,7 +69,7 @@
                 type="text"
                 name="txtNome"
                 id="txtNome"
-                @input="cliente.nome = $event.target.value"
+                v-model="cliente.nome"
                 required
               />
             </div>
@@ -81,7 +81,7 @@
                 id="masculino"
                 name="sexo"
                 value="masculino"
-                @input="cliente.sexo = $event.target.value"
+                v-model="cliente.sexo"
               />
               <label class="mr-3" for="masculino">Masculino</label>
               <input
@@ -90,7 +90,7 @@
                 id="feminino"
                 name="sexo"
                 value="feminino"
-                @input="cliente.sexo = $event.target.value"
+                v-model="cliente.sexo"
               />
               <label for="feminino">Feminino</label><br />
             </div>
@@ -101,7 +101,7 @@
                 type="date"
                 name="dtNascimento"
                 id="dtNascimento"
-                @input="cliente.nascimento = $event.target.value"
+                v-model="cliente.nascimento"
                 required
               />
             </div>
@@ -110,9 +110,11 @@
               <input
                 class="form-control"
                 type="text"
+                minlength="11"
+                maxlength="11"
                 name="Telefone"
                 id="txtTelefone"
-                @input="cliente.telefone = $event.target.value"
+                v-model="cliente.telefone"
                 required
               />
             </div>
@@ -124,7 +126,7 @@
                 id="fixo"
                 name="tipoTelefone"
                 value="fixo"
-                @input="cliente.tipoTelefone = $event.target.value"
+                v-model="cliente.tipoTelefone"
               />
               <label class="mr-3" for="fixo">Fixo</label>
               <input
@@ -133,12 +135,16 @@
                 id="celular"
                 name="tipoTelefone"
                 value="celular"
-                @input="cliente.tipoTelefone = $event.target.value"
+                v-model="cliente.tipoTelefone"
               />
               <label for="celular">Celular</label><br />
             </div>
             <div class="text-center mt-3 mb-5">
-              <button type="submit" class="btn btn-primary btn-block ">
+              <button
+                type="submit"
+                class="btn btn-primary btn-block"
+                id="btnCadastrar"
+              >
                 Criar seu Cadastro
               </button>
               <br />
@@ -157,18 +163,18 @@ export default {
   name: "CadastroComponent",
   data() {
     return {
-        cliente: {
-          cpf: null,
-          nome: null,
-          sexo: null,
-          nascimento: null,
-          telefone: null,
-          tipoTelefone: null,
-          login: {
-            email: null,
-            senha: null,
-            senhaConfirm: null,
-          },
+      cliente: {
+        cpf: null,
+        nome: null,
+        sexo: null,
+        nascimento: null,
+        telefone: null,
+        tipoTelefone: null,
+        login: {
+          email: null,
+          senha: null,
+          senhaConfirm: null,
+        },
       },
     };
   },
@@ -185,7 +191,6 @@ export default {
         body: JSON.stringify(this.cliente), // We send data in JSON format
       };
 
-      
       fetch("http://localhost:8080/salvar-cliente", postMethod)
         .then((response) => response.json())
         .then((data) => {

@@ -24,8 +24,7 @@
                 name="email"
                 id="email"
                 required
-                @input="login.email = $event.target.value"
-                :value="login.email"
+                v-model="login.email"
               />
             </div>
             <div class="mb-5">
@@ -36,12 +35,10 @@
                 name="senha"
                 id="senha"
                 required
-                @input="login.senha = $event.target.value"
-                :value="login.senha"
+                v-model="login.senha"
               />
             </div>
-
-            <button type="submit" class="btn btn-primary btn-block mb-5">
+            <button type="submit" class="btn btn-primary btn-block mb-5" id="btnContinuar">
               <!-- v-on:click="teste()" -->
               Continuar
             </button>

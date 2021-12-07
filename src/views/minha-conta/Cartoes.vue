@@ -85,7 +85,7 @@ export default {
     },
 
     excluir(id) {
-      const resposta = confirm("Escluir esse cartão?");
+      const resposta = confirm("Excluir esse cartão?");
       
       if (resposta == true) {
         let json = {

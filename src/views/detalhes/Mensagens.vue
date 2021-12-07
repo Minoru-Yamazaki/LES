@@ -12,7 +12,7 @@
         :key="mensagem.id"
       >
         <div>
-          {{ formataData(mensagem.data) }}
+          {{ mensagem.data }}
         </div>
         {{ mensagem.mensagem }}
       </div>

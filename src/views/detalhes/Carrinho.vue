@@ -242,7 +242,7 @@
             <div class="col-sm-4">
               <table
                 class="row mb-3"
-                v-for="cupom in cliente.cupons"
+                v-for="cupom in cuponsTroca"
                 :key="cupom.id"
                 v-show="showCupom"
               >
@@ -341,6 +341,9 @@ export default {
         { numero: "8979398619886519", ativo: false },
         { numero: "5646545642198896", ativo: true },
         { numero: "6449845646549846", ativo: true },
+        { numero: "1321687652313784", ativo: true },
+        { numero: "8961319879865126", ativo: true },
+        { numero: "8946519874651684", ativo: false },
       ],
       valorCupomPromocional: null,
       codigoCupomPromocional: null,
@@ -359,6 +362,7 @@ export default {
         { cep: "08715470", valor: 4.2 },
         { cep: "08730150", valor: 6.9 },
       ],
+      cuponsTroca: [],
       //dropdwon
       showCupom: false,
       showCartao: false,
@@ -408,7 +412,7 @@ export default {
 
       for (const cupom of this.cupons) {
         //adiciona cupons a lista de compra, conforme o array cupons
-        for (const cupomCliente of this.cliente.cupons) {
+        for (const cupomCliente of this.cuponsTroca) {
           if (cupom == cupomCliente.nome) {
             this.adicionaCupom(cupomCliente);
           }
@@ -450,6 +454,9 @@ export default {
     carregaInfos() {
       try {
         this.cliente = JSON.parse(localStorage.getItem("cliente"));
+        this.compra.produtos = JSON.parse(localStorage.getItem("produtos"));
+        this.compra.cliId = this.cliente.id;
+        this.consultarCupomTroca();
       } catch (error) {
         console.log(error);
       }
@@ -480,7 +487,7 @@ export default {
           var mensagem = "";
 
           for (var x in data.mensagens) {
-            mensagem += "\n" + data.mensagens[x];
+            mensagem += data.mensagens[x] + "\n";
           }
           alert(mensagem);
         })
@@ -618,6 +625,27 @@ export default {
             }
           });
       }
+    },
+    consultarCupomTroca() {
+      const json = {
+        cliId: this.cliente.id,
+      };
+
+      const postMethod = {
+        method: "POST", // Method itself
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        },
+        body: JSON.stringify(json), // We send data in JSON format
+      };
+
+      fetch("http://localhost:8080/consultar-cupom", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].id != null) {
+            this.cuponsTroca = data;
+          }
+        });
     },
     removerCupomPromocional() {
       for (const indice in this.compra.cupons) {

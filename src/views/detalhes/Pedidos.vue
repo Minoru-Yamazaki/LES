@@ -104,8 +104,6 @@ export default {
         .then((data) => {
           if (data[0].id != null) {
             this.pedidos = data;
-          } else {
-            alert(data[0].mensagens);
           }
         });
     },

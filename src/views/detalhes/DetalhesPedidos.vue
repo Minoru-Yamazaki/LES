@@ -103,9 +103,8 @@
             </tbody>
           </table>
         </div>
-      </div>      
+      </div>
     </div>
-    
   </div>
 </template>
 
@@ -258,9 +257,11 @@ export default {
         body: JSON.stringify(troca), // We send data in JSON format
       };
 
-      fetch("http://localhost:8080/alterar-troca", postMethod).then(() => {
-        location.reload();
-      });
+      fetch("http://localhost:8080/alterar-troca", postMethod)
+        .then((response) => response.json())
+        .then((data) => {
+          alert(data.mensagens[0]);
+        });
     },
     alterarCompra(compra) {
       const postMethod = {
